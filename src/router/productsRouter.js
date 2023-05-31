@@ -10,6 +10,8 @@ router.get('/', async (req, res) => {
     let page = parseInt(req.query.page);
     if (!page) page = 1;
 
+
+    //Confirmo si me pide el limite y si es asi lo actualizo
     if (limit) {
         let result = await productsCollection.paginate({}, {
             page,
@@ -53,7 +55,8 @@ router.get('/', async (req, res) => {
             sortOrders.isValid = !(page <= 0 || page > result.totalPages)
             res.render('products', sortOrders)
         }
-    } else if(query){
+    } //Si hay una categoria ingresada lo separo por categorias 
+    else if(query){
         let result = await productsCollection.paginate({category:query}, {
             page,
             limit: 10,
