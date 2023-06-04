@@ -1,10 +1,13 @@
 import express from 'express';
+import session from 'express-session'
 import router from "./router/productsRouter.js"
 import path from 'path';
 import __dirname from './utils.js';
 import {
     engine
 } from "express-handlebars"
+import productsRouter from './router/productsRouter.js';
+import cartRouter from './router/cartRouter.js';
 
 import productsCollection from './models/products.js';
 import cartsCollection from './models/cart.js';
@@ -21,13 +24,15 @@ app.use(express.urlencoded({
     extended: true
 }));
 
-app.use("/", router);
+app.use('/',productsRouter);
+app.use('/',cartRouter);
 
 app.engine('handlebars', engine())
 
 app.set('views', __dirname + '/views')
 
 app.set('view engine', 'handlebars');
+
 
 const PORT = process.env.PORT || 8080;
 
@@ -39,40 +44,9 @@ app.listen(PORT, (err) => {
     console.log("Server listening on port " + PORT);
 })
 
-let carts = cartsCollection.insertMany([{
-    "products": [{
-        "productId": "1",
-        "quantity": "2"
-    }, {
-        "productId": "2",
-        "quantity": "1"
-    }, {
-        "productId": "10",
-        "quantity": "1"
-    }, {
-        "productId": "5",
-        "quantity": "1"
-    }]
-}])
-/*, {
-    "products": [{
-        "productId": 5,
-        "quantity": 3
-    }]
-}, {
-    "products": [{
-        "productId": 11,
-        "quantity": 1
-    }, {
-        "productId": 5,
-        "quantity": 1
-    }, {
-        "productId": 7,
-        "quantity": 1
-    }]
-    
-}])
-*/
+// let carts = cartsCollection.create({
+
+// })
 
 /*
  let products = productsCollection.insertMany([{

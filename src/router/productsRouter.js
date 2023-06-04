@@ -1,4 +1,5 @@
 import express from 'express';
+import session from "express-session"
 import { Router} from 'express';
 import productsCollection from '../models/products.js';
 import {uploader} from "../utils.js";
@@ -24,36 +25,28 @@ router.get('/', async (req, res) => {
         res.render('products', result)
     } else if (sort) {
         if (sort === "desc") {
-            let sortOrders = await productsCollection.aggregate([{
-                $sort: {
-                    totalQuantity: -1
-                }
-            }])
             let result = await productsCollection.paginate({}, {
                 page,
-                limit: limit,
-                lean: true
+                limit: 10,
+                lean: true,
+                sort: {price: -1}
             })
-            sortOrders.prevLink = result.hasPrevPage ? `http://localhost:8080?page=${result.prevPage}` : '';
-            sortOrders.nextLink = result.hasNextPage ? `http://localhost:8080?page=${result.nextPage}` : '';
-            sortOrders.isValid = !(page <= 0 || page > result.totalPages)
-            res.render('products', sortOrders)
+            result.prevLink = result.hasPrevPage ? `http://localhost:8080?page=${result.prevPage}` : '';
+            result.nextLink = result.hasNextPage ? `http://localhost:8080?page=${result.nextPage}` : '';
+            result.isValid = !(page <= 0 || page > result.totalPages)
+            res.render('products', result)
         } 
         else if(sort==="asc"){
-            let sortOrders = await productsCollection.aggregate([{
-                $sort: {
-                    totalQuantity: 1
-                }
-            }])
             let result = await productsCollection.paginate({}, {
                 page,
-                limit: limit,
-                lean: true
+                limit: 10,
+                lean: true,
+                sort: {price: 1}
             })
-            sortOrders.prevLink = result.hasPrevPage ? `http://localhost:8080?page=${result.prevPage}` : '';
-            sortOrders.nextLink = result.hasNextPage ? `http://localhost:8080?page=${result.nextPage}` : '';
-            sortOrders.isValid = !(page <= 0 || page > result.totalPages)
-            res.render('products', sortOrders)
+            result.prevLink = result.hasPrevPage ? `http://localhost:8080?page=${result.prevPage}` : '';
+            result.nextLink = result.hasNextPage ? `http://localhost:8080?page=${result.nextPage}` : '';
+            result.isValid = !(page <= 0 || page > result.totalPages)
+            res.render('products', result)
         }
     } //Si hay una categoria ingresada lo separo por categorias 
     else if(query){
@@ -66,8 +59,7 @@ router.get('/', async (req, res) => {
         result.nextLink = result.hasNextPage ? `http://localhost:8080?page=${result.nextPage}` : '';
         result.isValid = !(page <= 0 || page > result.totalPages)
         res.render('products', result)
-    }
-    else {
+    } else {
         let result = await productsCollection.paginate({}, {
             page,
             limit: 10,
@@ -77,7 +69,7 @@ router.get('/', async (req, res) => {
         result.nextLink = result.hasNextPage ? `http://localhost:8080?page=${result.nextPage}` : '';
         result.isValid = !(page <= 0 || page > result.totalPages)
         res.render('products', result)
-    }
+     }
 })
 
 router.use(express.json());
