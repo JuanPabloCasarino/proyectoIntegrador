@@ -86,6 +86,7 @@ router.delete('/api/carts/:cid', async (req, res) => {
   
       // Eliminar todos los productos del carrito
       cart.products = []; 
+      
       res.status(200).json({ message: 'Todos los productos del carrito han sido eliminados exitosamente' });
     } catch (error) {
       console.error(error);
