@@ -1,28 +1,45 @@
 {{#if isValid}}
-<div>
+<div class="d-flex justify-content-evenly flex-row mb-3">
     {{#each docs}}
-    <div>
-        <p>Title: {{this.title}} &nbsp; Category: {{this.category}}</p>
-        <p>Price: {{this.price}} &nbsp; Stock: {{this.stock}}</p>
+    <div class="card text-center"  style="width: 20%">
+        <div class="card-body">
+            <h5 class="card-title">{{this.title}}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">{{this.category}}</h6>
+            <p class="card-text">{{this.description}}</p>
+            <p class="card-text">${{this.price}}</p>
+            <p class="card-text">Stock: {{this.stock}}</p>
+            <button type="button" class="btn btn-success">Success</button>
+        </div>
     </div>
-    <br/>
     {{/each}}
 </div>
-<br/>
-<div>
-    {{#if hasPrevPage}}
-        <a href={{this.prevLink}}><< Anterior</a>
-    {{/if}}
-    &nbsp;
-    {{this.page}}
-    &nbsp;
-     {{#if hasNextPage}}
-        <a href={{this.nextLink}}>Siguiente >></a>
-    {{/if}} 
+<br />
+<div class="d-flex justify-content-center flex-row mb-3">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            {{#if hasPrevPage}}
+            <li class="page-item">
+                <a class="page-link" href={{this.prevLink}} aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {{/if}}
+            <li class="page-item"><a class="page-link">{{this.page}}</a></li>
+            {{#if hasNextPage}}
+            <li class="page-item">
+                <a class="page-link" href={{this.nextLink}} aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {{/if}}
+        </ul>
+    </nav>
 </div>
-<div>
+<div class="d-flex justify-content-center">
     <p1>Total de paginas: {{this.totalPages}}</p1>
 </div>
+
+
 {{else}}
 <h1>No hay productos para mostrar</h1>
 {{/if}}
