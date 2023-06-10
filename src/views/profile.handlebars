@@ -1,22 +1,17 @@
-<h1>Perfil</h1>
-<div>
-    <table>
-        <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Email</th>
-            <th>Edad</th>
-        </tr>
-        <tr>
-            <td>{{firstname}}</td>
-            <td>{{lastname}}</td>
-            <td>{{email}}</td>
-            <td>{{age}}</td>
-        </tr>
-    </table>
-</div>
-<div>
-    <a href="http://localhost:3000/logout">
-        <button>Cerrar sesion</button>
-    </a>
+<div class="list-group m-3">
+    <h1>Perfil</h1>
+    <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{firstname}} {{lastname}}</h5>
+        <small>{{age}}</small>
+    </div>
+    <p class="mb-1">{{email}}</p>
+    <p class="mb-1">Rol: {{rol}}</p>
+    <div class="d-flex w-100">
+        <a href="http://localhost:8080/logout" class="m-2">
+            <button type="button" class="btn btn-danger">Cerrar sesion</button>
+        </a>
+        <a href="http://localhost:8080/api/products" class="m-2">
+            <button type="button" class="btn btn-info">Ir a los productos</button>
+        </a>
+    </div>
 </div>

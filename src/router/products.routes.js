@@ -12,7 +12,8 @@ const router = Router();
 
 router.get(`/${path}`, async (req, res) => {
   const { limit, page, sort, category, status } = req.query;
-
+  // const { firstname, lastname, email, age, rol } = req.session.user;
+  
   try {
     const options = {
       limit: limit || 10,
@@ -34,10 +35,9 @@ router.get(`/${path}`, async (req, res) => {
     }
 
     const result = await products.getAllProducts({}, options);
-    // const { totalPages, docs, hasPrevPage, hasNextPage, prevPage, nextPage } = result;
 
-    result.prevLink = await result.hasPrevPage ? `http://localhost:8080/${path}?page=${result.prevPage}` : '';
-    result.nextLink = await result.hasNextPage ? `http://localhost:8080/${path}?page=${result.nextPage}` : '';
+    result.prevLink = await result.hasPrevPage ? `http://localhost:8080/api/${path}?page=${result.prevPage}` : '';
+    result.nextLink = await result.hasNextPage ? `http://localhost:8080/api/${path}?page=${result.nextPage}` : '';
     result.isValid = !(page <= 0 || page > result.totalPages)
     res.render('products', result)
   } catch (error) {

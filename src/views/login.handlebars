@@ -1,10 +1,19 @@
-<h1>Iniciar sesion</h1>
-
-<div>
-    <form action="http://localhost:3000/login" method="post">
-        <input type="email" name="email" placeholder="Email"/>
-        <input type="password" name="password" placeholder="Password"/>
-        <button type="submit">Iniciar sesion</button>
-    </form>
+<form class="row g-3 m-2" action="http://localhost:8080/login" method="post">
+  <h1>Iniciar sesion</h1>
+  <div class="col-md-6">
+    <label class="form-label">Email</label>
+    <input type="email" class="form-control" name="email">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Contraseña</label>
+    <input type="password" class="form-control" name="password">
+  </div>
+  <div class="col-md-12">
+    <button type="submit" class="btn btn-success">Confirmar</button>
+  </div>
+  <div class="d-flex w-100">
+    <a href="http://localhost:8080">
+            <button type="button" class="btn btn-warning">Volver a registrarse</button>
+    </a>
 </div>
-<br/>
+</form>

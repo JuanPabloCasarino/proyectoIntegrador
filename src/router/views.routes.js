@@ -24,20 +24,20 @@ router.get('/', publicRoute, (req,res)=>{
     res.render('register', { title: "Express" })
 })
 
-router.post('/', publicRoute, async (req,res)=>{
-    const { firstname, lastname, email, age, password } = req.body;
-    if(!firstname || !lastname || !email || !age || !password ){
+router.post('/register', publicRoute, async (req,res)=>{
+    const { firstname, lastname, age, email, password } = req.body;
+    if(!firstname || !lastname ||  !age || !email  || !password ){
         console.log("Faltan campos obligatorios por ingresar");
     }
-    console.log(firstname, lastname, email);
     const userEx = await UserModel.findOne({email});
     if( userEx ) {
         console.error('Error, el usuario ya esta registrado');
         res.redirect('/');
     }
     try {
-        const user = new UserModel({ firstname, lastname, email, age, password });
+        const user = new UserModel({ firstname, lastname, age, email,  password, rol:"usuario" });
         await user.save();
+        console.log("Usuario "+email+" registrado con exito")
         res.redirect('/login');
     } catch (error) {
         console.error('Error al registrar el usuario:', error);
@@ -71,8 +71,8 @@ router.get('/profile', privateRoute, (req, res) => {
     if (!req.session.user) {
         res.redirect('/login');
     } else {
-        const { firstname, lastname, email, age } = req.session.user;
-        res.render('profile', { firstname, lastname, email, age });
+        const { firstname, lastname, email, age, rol } = req.session.user;
+        res.render('profile', { firstname, lastname, email, age, rol });
     }
 });
 

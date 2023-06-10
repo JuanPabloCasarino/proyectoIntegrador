@@ -1,7 +1,16 @@
+{{!-- {{#if email}}
+<div class="list-group m-3">
+    <h1>Bienvenido</h1>
+    <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{firstname}} {{lastname}}</h5>
+        <small>{{age}}</small>
+    </div>
+</div>
+{{/if}} --}}
 {{#if isValid}}
 <div class="d-flex justify-content-evenly flex-row mb-3">
     {{#each docs}}
-    <div class="card text-center"  style="width: 20%">
+    <div class="card text-center" style="width: 20%">
         <div class="card-body">
             <h5 class="card-title">{{this.title}}</h5>
             <h6 class="card-subtitle mb-2 text-body-secondary">{{this.category}}</h6>
