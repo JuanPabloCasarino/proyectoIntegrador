@@ -1,15 +1,12 @@
 import express from 'express';
 import session from 'express-session'
-import router from "./router/products.routes.js"
 import path from 'path';
 import __dirname from './utils.js';
 import {engine} from "express-handlebars"
 
 import productsRouter from './router/products.routes.js';
 import cartRouter from './router/carts.routes.js';
-
-import productsCollection from './dao/models/product.model.js';
-import cartsCollection from './dao/models/cart.model.js'
+import viewsRouter from './router/views.routes.js';
 
 const publics = path.join(__dirname, './public');
 
@@ -23,8 +20,15 @@ app.use(express.urlencoded({
     extended: true
 }));
 
+app.use(session({
+    secret: 's3cr3t3',
+    resave: false,
+    saveUninitialized: false
+}));
+
 app.use('/api',productsRouter);
 app.use('/api',cartRouter);
+app.use('/',viewsRouter);
 
 app.engine('handlebars', engine())
 
@@ -43,8 +47,5 @@ app.listen(PORT, (err) => {
     console.log("Server listening on port " + PORT);
 })
 
-//  let carts = cartsCollection.create({
-
-//  })
 
 export default app;

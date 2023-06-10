@@ -1,27 +1,33 @@
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <h2 class="text-center mb-4">Registrate !</h2>
-                <form action="/users/register" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="Name">Nombre:</label>
-                        <input type="text" class="form-control" id="Name" name="Name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="Lastname">Apellido:</label>
-                        <input type="text" class="form-control" id="Lastname" name="Lastname" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="Age">Edad:</label>
-                        <input type="number" class="form-control" id="Age" name="Age" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="ProfilePicture">Foto:</label>
-                        <input type="file" name="ProfilePicture" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block mt-4">Enviar</button>
-                </form>
-            </div>
-        </div>
-    </div>
+<form class="row g-3 m-2" action="http://localhost:3000/register" method="post">
+  <h1>Crear un usuario</h1>
+  <div class="col-12">
+    <label class="form-label">Nombre</label>
+    <input type="text" class="form-control" name="firstname">
+  </div>
+  <div class="col-12">
+    <label class="form-label">Apellido</label>
+    <input type="text" class="form-control" name="lastname">
+  </div>
+  <div class="col-12">
+    <label class="form-label">Edad</label>
+    <input type="text" class="form-control" name="edad">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Email</label>
+    <input type="email" class="form-control" name="age">
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Password</label>
+    <input type="password" class="form-control" name="password">
+  </div>
+  <div class="col-md-12">
+    <button type="submit">Registrarse</button>
+  </div>
+</form>
+<br />
+<div class="m-2">
+  <h2>Si ya tienes usuario puedes:</h2>
+  <a href="http://localhost:3000/login">
+    <button>Iniciar sesion</button>
+  </a>
+</div>

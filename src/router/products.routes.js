@@ -4,7 +4,6 @@ import { Router, query } from 'express';
 import { ProductManagerDB } from '../dao/managers/DB/ProductManager.db.js';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
-import productsCollection from '../dao/models/product.model.js';
 const products = new ProductManagerDB();
 
 const path = 'products';

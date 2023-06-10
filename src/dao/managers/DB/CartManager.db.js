@@ -50,7 +50,6 @@ export class CartManagerDB {
     });
 
     await cart.save();
-
     return cart;
   }
 

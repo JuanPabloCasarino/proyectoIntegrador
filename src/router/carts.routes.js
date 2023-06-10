@@ -23,8 +23,9 @@ router.get(`/${path}/:cid`, async (req, res) => {
 
   try {
     const cart = await cartsManager.getCartById(cid);
-    console.log(cart);
-    res.render('productsOnCart', cart)
+    console.log(JSON.stringify(cart,null, '\t'));
+    console.log(JSON.stringify(cart.products,null, '\t'));
+    res.render('productsOnCart',cart)
   } catch (error) {
     console.log(error);
   }
