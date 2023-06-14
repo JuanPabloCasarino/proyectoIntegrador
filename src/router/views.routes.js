@@ -81,4 +81,5 @@ router.get('/logout', privateRoute, (req, res) => {
     res.redirect('/login');
 });
 
+
 export default router;

@@ -12,8 +12,7 @@ const router = Router();
 
 router.get(`/${path}`, async (req, res) => {
   const { limit, page, sort, category, status } = req.query;
-  // const { firstname, lastname, email, age, rol } = req.session.user;
-  
+
   try {
     const options = {
       limit: limit || 10,
