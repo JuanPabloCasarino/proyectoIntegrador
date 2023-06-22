@@ -67,12 +67,13 @@ const initializePassport = () => {
     }, async (accessToken, refreshToken,profile, done) => {
         try{
             console.log(profile);
-            let user = await UserModel.findOne({email:profile.json.email})
+            let user = await UserModel.findOne({email:profile._json.username})
             if (!user){
+                const  email = profile._json.email ? profile.json.email : "Not mail";
                 const newUser = {
-                    firstname:profile.json.firstname,
+                    firstname:profile._json.username,
                     lastname:'',
-                    email:profile.json.email,
+                    email,
                     age:20,
                     password:'',
                     rol: 'usuario'

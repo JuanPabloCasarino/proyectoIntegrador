@@ -56,11 +56,6 @@ app.listen(PORT, (err) => {
     console.log("Server listening on port " + PORT);
 })
 
-export const db = mongoose.connection;
 
-db.on('error',console.error.bind(console,'Error to connect to MongoDB'));
-db.once('open', () =>{
-    console.log('Connection successful to MongoDB'); 
-})
 
 export default app;

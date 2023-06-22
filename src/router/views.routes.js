@@ -24,30 +24,11 @@ const publicRoute = (req, res, next) => {
     }
 };
 
-router.get('/', publicRoute, (req,res)=>{
+router.get('/register', publicRoute, (req,res)=>{
     res.render('register', { title: "Express" })
 })
 
 router.post('/register',passport.authenticate('register', {failureRedirect:'failRegister'}), publicRoute, async (req,res)=>{
-    /*const { firstname, lastname, age, email, password } = req.body;
-    if(!firstname || !lastname ||  !age || !email  || !password ){
-        console.log("Faltan campos obligatorios por ingresar");
-    }
-    const userEx = await UserModel.findOne({email});
-    if( userEx ) {
-        console.error('Error, el usuario ya esta registrado');
-        res.redirect('/');
-    }
-    try {
-        const user = new UserModel({ firstname, lastname, age, email,  password:createHash(password), rol:"usuario" });
-        await user.save();
-        console.log("Usuario "+email+" registrado con exito")
-        res.redirect('/login');
-    } catch (error) {
-        console.error('Error al registrar el usuario:', error);
-        res.redirect('/');
-    }
-    */
     res.redirect('/login');
 })
 router.get('/failRegister', async (req, res) => {
@@ -60,27 +41,6 @@ router.get('/login', publicRoute, (req, res) => {
 });
 
 router.post('/login',passport.authenticate('login',{failureRedirect:'/failLogin'}), publicRoute, async (req, res) => {
-    /*
-    const { email, password } = req.body;
-
-    try {
-        const user = await UserModel.findOne({ email });
-        if (!user) {
-            console.log("Este usuario no existe");
-            res.redirect('/login');
-        } else if(!isValidPassword(user, password)) {
-            console.log("Contrasena incorrecta");
-            res.redirect('/login');
-        } else{
-            req.session.user = user;
-            console.log("Bienvenido, has entrado a tu perfil");
-            res.redirect('/profile');
-        }
-    } catch (error) {
-        console.error('Error al iniciar sesión:', error);
-        res.redirect('/login');
-    }
-    */
    if(!req.user) return res.status(400).send({status:'error', error:'Invalid credentials'});
    req.session.user = {
     firstname: req.user.firstname,
