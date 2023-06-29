@@ -53,7 +53,7 @@ router.post('/login', passport.authenticate('login', { failureRedirect: '/failLo
         rol
     };
     console.log("Bienvenido, has entrado a tu perfil");
-    res.render('profile', { payload: req.user });
+    res.redirect('profile');
 });
 
 
