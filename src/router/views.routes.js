@@ -40,18 +40,22 @@ router.get('/login', publicRoute, (req, res) => {
     res.render('login');
 });
 
-router.post('/login',passport.authenticate('login',{failureRedirect:'/failLogin'}), publicRoute, async (req, res) => {
-   if(!req.user) return res.status(400).send({status:'error', error:'Invalid credentials'});
-   req.session.user = {
-    firstname: req.user.firstname,
-    lastname: req.user.lastname,
-    age: req.user.age,
-    email: req.user.email,
-    rol: req.user.rol
-   }
-   console.log("Bienvenido, has entrado a tu perfil");
-    res.redirect('/profile', {payload:req.user});
+router.post('/login', passport.authenticate('login', { failureRedirect: '/failLogin' }), publicRoute, async (req, res) => {
+    if (!req.user) {
+        return res.status(400).send({ status: 'error', error: 'Invalid credentials' });}
+
+    const { firstname, lastname, age, email, rol } = req.user;
+    req.session.user = {
+        firstname,
+        lastname,
+        age,
+        email,
+        rol
+    };
+    console.log("Bienvenido, has entrado a tu perfil");
+    res.render('profile', { payload: req.user });
 });
+
 
 router.get('/failLogin', async (req, res) => {
     console.log('Failed login');

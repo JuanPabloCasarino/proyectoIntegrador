@@ -38,14 +38,15 @@ const initializePassport = () => {
             return done('Error al obtener el usuario: ' + error)
         }
     }))
-    
-    passport.serializeUser = ((user, done) => {
+
+    passport.serializeUser ((user, done) => {
+        console.log(user)
         done(null, user._id)
     })
-    passport.deserializeUser = (async (id, done) => {
-        let user = await UserModel.findByID(id)
+    passport.deserializeUser (async (id, done) => {
+        let user = await UserModel.findById(id)
         done(null, user)
-    })
+    }) 
     
     passport.use('login', new LocalStrategy({usernameField: 'email'}, async (username, password, done) => {
         try {
@@ -67,11 +68,11 @@ const initializePassport = () => {
     }, async (accessToken, refreshToken,profile, done) => {
         try{
             console.log(profile);
-            let user = await UserModel.findOne({email:profile._json.username})
+            let user = await UserModel.findOne({email:profile._json.name})
             if (!user){
                 const  email = profile._json.email ? profile.json.email : "Not mail";
                 const newUser = {
-                    firstname:profile._json.username,
+                    firstname:profile._json.name,
                     lastname:'',
                     email,
                     age:20,
@@ -84,6 +85,6 @@ const initializePassport = () => {
         } catch (error){
             return done(error);
         }
-    }))
+    }))  
 }
 export default initializePassport
