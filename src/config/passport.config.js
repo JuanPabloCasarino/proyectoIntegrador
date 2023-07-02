@@ -3,19 +3,38 @@ import local from 'passport-local'
 import UserModel from '../dao/models/user.model.js';
 import {createHash,isValidPassword} from '../utils.js';
 import GitHubStrategy from 'passport-github2';
+import jwt from 'passport-jwt';
+
+const JWTStrategy = jwt.Strategy;
+const ExtractJWT = jwt.ExtractJwt;
+const secretOrKey = 'coderSecret';
 
 const LocalStrategy = local.Strategy;
 const initializePassport = () => {
+    const cookieExtractor = req =>{
+        let token = null;
+        if (req && req.cookies){
+            token = req.cookies['coderCookieToken']
+        } 
+        return token;
+    }
+    passport.use('jwt', new JWTStrategy({
+        jwtFromRequest:ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey:'coderSecret',
+    }, async (jwt_payload, done)=>{
+        try{ 
+            return done(null, jwt_payload);
+        }
+        catch(err){
+            return done(err);
+        }
+    }))
+
     passport.use('register', new LocalStrategy({
         passReqToCallback: true,
         usernameField: 'email'
     }, async (req, username, password, done) => {
-        const {
-            firstname,
-            lastname,
-            email,
-            age,
-        } = req.body;
+        const {firstname,lastname,email,age,} = req.body;
         try {
             let user = await UserModel.findOne({
                 email: username
@@ -30,7 +49,7 @@ const initializePassport = () => {
                 email,
                 age,
                 password: createHash(password),
-                rol: 'usuario'
+                rol: 'usuario',
             }
             let result = await UserModel.create(newUser)
             return done(null, result)
@@ -50,7 +69,7 @@ const initializePassport = () => {
     
     passport.use('login', new LocalStrategy({usernameField: 'email'}, async (username, password, done) => {
         try {
-            const user = await UserModel.findOne({email: username})
+            const user = await UserModel.findOne({email: username});
             if (!user) {
                 console.log('User does not exist')
                 return done(null, false)
@@ -77,7 +96,7 @@ const initializePassport = () => {
                     email,
                     age:20,
                     password:'',
-                    rol: 'usuario'
+                    rol: 'usuario',
                 }
                 let result = await UserModel.create(newUser);
                 done(null, result);
@@ -87,4 +106,5 @@ const initializePassport = () => {
         }
     }))  
 }
-export default initializePassport
+
+export default initializePassport;

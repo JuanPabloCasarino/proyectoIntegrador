@@ -1,11 +1,15 @@
+//IMPORTO LIBRERIAS 
 import express from 'express';
 import session from 'express-session'
 import mongoose from 'mongoose';
 import path from 'path';
-import __dirname from './utils.js';
 import {engine} from "express-handlebars"
 import passport from 'passport';
+import cookieParser from 'cookie-parser';
+
+// IMPORTO FUNCIONES CREADAS POR MI
 import initializePassport from './config/passport.config.js'
+import __dirname from './utils.js';
 
 import productsRouter from './router/products.routes.js';
 import cartRouter from './router/carts.routes.js';
@@ -13,26 +17,29 @@ import viewsRouter from './router/views.routes.js';
 import sessionsRouter from './router/sessions.router.js';
 
 const publics = path.join(__dirname, './public');
+const secretOrKey = 'coderSecret';
 
 const app = express();
 
+app.use(session({
+    secret: secretOrKey,
+    resave: false,
+    saveUninitialized: false
+}));
 app.use(express.static(publics));
-
 app.use(express.json());
-
+app.use(passport.session());
+app.use(cookieParser());
+initializePassport()
+app.use(passport.initialize());
 app.use(express.urlencoded({
     extended: true
 }));
 
-app.use(session({
-    secret: 's3cr3t3',
-    resave: false,
-    saveUninitialized: false
-}));
 
-initializePassport()
-app.use(passport.initialize());
-app.use(passport.session());
+
+
+
 
 app.use('/api',productsRouter);
 app.use('/api',cartRouter);

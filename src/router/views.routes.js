@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import passport from 'passport';
+// import jwt from 'passport-jwt';
+import jwt from 'jsonwebtoken';
 import UserModel from '../dao/models/user.model.js';
-import { createHash, isValidPassword } from '../utils.js';
 import initializePassport from '../config/passport.config.js'
 
-
 const router = Router();
+const secretOrKey = 'coderSecret';
 
 // Middleware para validar rutas privadas
 const privateRoute = (req, res, next) => {
@@ -41,17 +42,21 @@ router.get('/login', publicRoute, (req, res) => {
 });
 
 router.post('/login', passport.authenticate('login', { failureRedirect: '/failLogin' }), publicRoute, async (req, res) => {
+    // const { firstname, lastname, age, email, rol } = req.user;
+    /*
     if (!req.user) {
         return res.status(400).send({ status: 'error', error: 'Invalid credentials' });}
 
-    const { firstname, lastname, age, email, rol } = req.user;
     req.session.user = {
         firstname,
         lastname,
         age,
         email,
         rol
-    };
+    };*/
+    const {email, password} =req.body;
+    const token = jwt.sign({email, password}, secretOrKey, {expiresIn:'1h'});
+    res.cookie('coderCookieToken', token, {maxAge:60*60*1000, httpOnly:true});
     console.log("Bienvenido, has entrado a tu perfil");
     res.redirect('profile');
 });
@@ -75,6 +80,10 @@ router.get('/logout', privateRoute, (req, res) => {
     req.session.destroy();
     res.redirect('/login');
 });
+
+router.get('/current', passport.authenticate('jwt', {session: false},(req, res) => {
+    res.send(req.user);
+}))
 
 
 export default router;

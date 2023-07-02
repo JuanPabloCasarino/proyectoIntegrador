@@ -28,8 +28,24 @@ const userSchema = new mongoose.Schema({
     rol: {
         type: String,
         required: false,
+    },
+    carts: {
+        type: [
+          {
+            cart: {
+              type: Schema.Types.ObjectId,
+              ref: "carts"
+            }
+          },
+        ],
+        default: [],
+        required: false
     }
 })
+userSchema.pre("find", function () {
+    this.populate("carts.cart")
+  })
+  
 
 const UserModel = db.model(usersCollection, userSchema);
 
