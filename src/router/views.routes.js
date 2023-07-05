@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import passport from 'passport';
-// import jwt from 'passport-jwt';
 import jwt from 'jsonwebtoken';
 import UserModel from '../dao/models/user.model.js';
 import initializePassport from '../config/passport.config.js'
+import passportCall  from '../utils.js';
 
 const router = Router();
 const secretOrKey = 'coderSecret';
@@ -69,9 +69,9 @@ router.get('/logout', privateRoute, (req, res) => {
     res.redirect('/login');
 });
 
-router.get('/current', passport.authenticate('jwt', {session: false},(req, res) => {
-    res.send(req.user);
-}))
+router.get('/current', passport.authenticate('jwt', {session: false}),(req, res) => {
+    res.status(200).send(req.user);
+})
 
 
 export default router;
