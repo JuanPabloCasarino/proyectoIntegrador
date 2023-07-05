@@ -37,10 +37,6 @@ app.use(express.urlencoded({
 }));
 
 
-
-
-
-
 app.use('/api',productsRouter);
 app.use('/api',cartRouter);
 app.use('/',viewsRouter);

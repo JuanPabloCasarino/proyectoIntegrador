@@ -42,23 +42,11 @@ router.get('/login', publicRoute, (req, res) => {
 });
 
 router.post('/login', passport.authenticate('login', { failureRedirect: '/failLogin' }), publicRoute, async (req, res) => {
-    // const { firstname, lastname, age, email, rol } = req.user;
-    /*
-    if (!req.user) {
-        return res.status(400).send({ status: 'error', error: 'Invalid credentials' });}
-
-    req.session.user = {
-        firstname,
-        lastname,
-        age,
-        email,
-        rol
-    };*/
+     req.session.user = req.user;
     const {email, password} =req.body;
     const token = jwt.sign({email, password}, secretOrKey, {expiresIn:'1h'});
-    res.cookie('coderCookieToken', token, {maxAge:60*60*1000, httpOnly:true});
+    res.cookie('coderCookieToken', token, {maxAge:60*60*1000, httpOnly:true}).redirect('profile');;
     console.log("Bienvenido, has entrado a tu perfil");
-    res.redirect('profile');
 });
 
 
