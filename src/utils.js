@@ -45,4 +45,4 @@ const passportCall = (strategy) => {
 
 
 
-export default __dirname;
+export {__dirname, generateToken, authToken, passportCall};

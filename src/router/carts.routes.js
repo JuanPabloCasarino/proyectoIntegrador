@@ -5,7 +5,7 @@ import {
   getAllCarts,
   getCartById,
   createCart,
-  addProducTtoCart,
+  addProductToCart,
   deleteProduct,
   deleteAllProducts,
   updateProduct,
@@ -26,7 +26,7 @@ router.get(`/${path}/:cid`, getCartById);
 router.post(`/${path}`, createCart);
 
 //Agrego un producto a un carrito
-router.post(`/${path}/:cid/products/:pid`, addProducTtoCart);
+router.post(`/${path}/:cid/products/:pid`, addProductToCart);
 
 // Eliminamos un producto del carrito
 router.delete(`/${path}/:cid/products/:pid`, deleteProduct);

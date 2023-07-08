@@ -1,6 +1,4 @@
-import {
-  CartManagerDB
-} from '../dao/managers/DB/CartManager.db.js';
+import {CartManagerDB} from '../dao/managers/DB/CartManager.db.js';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import express from 'express';
 
@@ -37,7 +35,7 @@ const createCart = async (req, res) => {
   }
 }
 
-const addProducTtoCart = async (req, res) => {
+const addProductToCart = async (req, res) => {
   const {
     cid,
     pid
@@ -113,7 +111,7 @@ export {
   getAllCarts,
   getCartById,
   createCart,
-  addProducTtoCart,
+  addProductToCart,
   deleteProduct,
   deleteAllProducts,
   updateProduct,

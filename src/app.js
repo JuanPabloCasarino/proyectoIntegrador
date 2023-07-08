@@ -10,7 +10,7 @@ import config from './config/config.js';
 
 // IMPORTO FUNCIONES CREADAS POR MI
 import initializePassport from './config/passport.config.js'
-import __dirname from './utils.js';
+import {__dirname} from './utils.js';
 
 import productsRouter from './router/products.routes.js';
 import cartRouter from './router/carts.routes.js';
@@ -42,10 +42,9 @@ app.use('/api',cartRouter);
 app.use('/',viewsRouter);
 app.use('/api/sessions',sessionsRouter);
 
+//Configuracion de handlebars
 app.engine('handlebars', engine())
-
 app.set('views', __dirname + '/views')
-
 app.set('view engine', 'handlebars');
 
 app.listen(config.port, (err) => {
