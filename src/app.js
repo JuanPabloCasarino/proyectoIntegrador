@@ -6,6 +6,7 @@ import path from 'path';
 import {engine} from "express-handlebars"
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
+import config from './config/config.js';
 
 // IMPORTO FUNCIONES CREADAS POR MI
 import initializePassport from './config/passport.config.js'
@@ -17,12 +18,11 @@ import viewsRouter from './router/views.routes.js';
 import sessionsRouter from './router/sessions.router.js';
 
 const publics = path.join(__dirname, './public');
-const secretOrKey = 'coderSecret';
 
 const app = express();
 
 app.use(session({
-    secret: secretOrKey,
+    secret: config.secretOrKey,
     resave: false,
     saveUninitialized: false
 }));
@@ -48,15 +48,12 @@ app.set('views', __dirname + '/views')
 
 app.set('view engine', 'handlebars');
 
-
-const PORT = process.env.PORT || 8080;
-
-app.listen(PORT, (err) => {
+app.listen(config.port, (err) => {
     if (err) {
         console.log("Connection error", err);
         return;
     }
-    console.log("Server listening on port " + PORT);
+    console.log("Server listening on port " + config.port);
 })
 
 
