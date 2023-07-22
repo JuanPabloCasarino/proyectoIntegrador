@@ -56,7 +56,7 @@ const postLogin = async (req, res) => {
     res.cookie('coderCookieToken', token, {
         maxAge: 60 * 60 * 1000,
         httpOnly: true
-    }).redirect('profile');;
+    }).redirect('profile');
     console.log("Bienvenido, has entrado a tu perfil");
 }
 const failLogin = async (req, res) => {

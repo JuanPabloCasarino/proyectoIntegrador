@@ -111,9 +111,7 @@ const purchaseProduct = async (req, res) => {
     if (!cart) {
       return res.status(404).json({ message: 'Carrito no encontrado' });
     }
-    const products = await cart.populate('products');
-    const product = await productService.getProductById(cart.products.populate(products));
-    console.log(product);
+
     /*
     for (const cartItem of cart.products) {
       const product = cartItem.product;

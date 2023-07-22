@@ -8,7 +8,6 @@ import config from './config.js';
 
 const JWTStrategy = jwt.Strategy;
 const ExtractJWT = jwt.ExtractJwt;
-const secretOrKey = 'coderSecret';
 
 const LocalStrategy = local.Strategy;
 const initializePassport = () => {
@@ -19,9 +18,28 @@ const initializePassport = () => {
         } 
         return token;
     }
+    const  isAdmin = async (req, res, next) => {
+        const user = await req.user; 
+      
+        if (!user || user.rol !== 'admin') {
+          return res.status(403).json({ error: 'Access denied. Admins only.' });
+        }
+      
+        next();
+      }
+      
+      const  isUser = async (req, res, next) => {
+        const user = await req.user; 
+      
+        if (!user || user.rol !== 'usuario') {
+          return res.status(403).json({ error: 'Access denied. Users only.' });
+        }
+      
+        next();
+      }
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest:ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey:'coderSecret',
+        secretOrKey:config.secretOrKey,
     }, async (jwt_payload, done)=>{
         try{ 
             return done(null, jwt_payload);

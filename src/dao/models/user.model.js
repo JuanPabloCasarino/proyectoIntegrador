@@ -40,6 +40,17 @@ const userSchema = new mongoose.Schema({
         ],
         default: [],
         required: false
+    },
+    orders: {
+        type: [
+          {
+            cart: {
+              type: Schema.Types.ObjectId,
+              ref: "orders"
+            }
+          },
+        ],
+        default: [],
     }
 })
 userSchema.pre("find", function () {

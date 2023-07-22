@@ -8,6 +8,7 @@ import {
   updateProduct,
   deleteProduct
 } from '../controllers/products.controller.js'
+import passportConfig from '../config/passport.config.js';
 
 const router = Router();
 

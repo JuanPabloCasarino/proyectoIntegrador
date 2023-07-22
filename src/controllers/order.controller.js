@@ -37,7 +37,7 @@ const createOrder = async(req, res) => {
         const orderNumber = Date.now() + Math.floor(Math.random() * 10000 + 1);
 
         let newOrder = {
-            nombre: orderNumber,
+            number: orderNumber,
             businessId,
             userId,
             status: "pending",
@@ -48,7 +48,7 @@ const createOrder = async(req, res) => {
         console.log(newOrder);
         const orderResult = await order.createOrder(newOrder);
 
-        await user.updateOrderByUserId(userId, orderResult.id);
+        await user.updateOrderByUserId(userId, orderResult._id);
         res.status(200).send({status: "Success", orderResult});
     } catch (e) {
         console.log("error - create Order", e);
