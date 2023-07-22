@@ -1,8 +1,16 @@
 // Importamos nuestros modelo de Cart para trabajar sobre el con los métodos de mongoose
-import CartModel from '../../models/cart.model.js';
-import ProductModel from '../../models/product.model.js';
+import CartModel from '../dao/models/cart.model.js';
+import ProductModel from '../dao/models/product.model.js';
 
-export class CartManagerDB {
+export class CartServiceDB {
+  static instance = null;
+
+  constructor() {
+    if (!CartServiceDB.instance) {
+      CartServiceDB.instance = this;
+    }
+    return CartServiceDB.instance;
+  }
   // Llamamos todos los Carts
   async getAllCarts() {
     const carts = await CartModel.find();

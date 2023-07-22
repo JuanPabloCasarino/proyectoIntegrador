@@ -1,5 +1,4 @@
 import {Router} from 'express';
-import mongoosePaginate from 'mongoose-paginate-v2';
 import express from 'express';
 import {
   getAllCarts,
@@ -9,34 +8,36 @@ import {
   deleteProduct,
   deleteAllProducts,
   updateProduct,
-  updateProductToCart
+  updateProductToCart,
+  purchaseProduct
 } from '../controllers/carts.controller.js';
-
-const path = 'carts';
 
 const router = Router();
 
 //Obtengo todos los carritos
-router.get(`/${path}`, getAllCarts);
+router.get(`/`, getAllCarts);
 
 //Muestro los productos de un carrito por su ID
-router.get(`/${path}/:cid`, getCartById);
+router.get(`/:cid`, getCartById);
 
 //Creo un nuevo carrito vacio
-router.post(`/${path}`, createCart);
+router.post(`/`, createCart);
 
 //Agrego un producto a un carrito
-router.post(`/${path}/:cid/products/:pid`, addProductToCart);
+router.post(`/:cid/products/:pid`, addProductToCart);
 
 // Eliminamos un producto del carrito
-router.delete(`/${path}/:cid/products/:pid`, deleteProduct);
+router.delete(`/:cid/products/:pid`, deleteProduct);
 
 // Eliminamos todos los productos del carrito
-router.delete(`/${path}/:cid`, deleteAllProducts);
+router.delete(`/:cid`, deleteAllProducts);
 
 //Actualizo el carrito con un producto
-router.put(`/${path}/:cid`, updateProduct);
+router.put(`/:cid`, updateProduct);
 
-router.put(`/${path}/:cid/products/:pid`, updateProductToCart);
+// Actualizo un producto de un carrito
+router.put(`/:cid/products/:pid`, updateProductToCart);
+
+router.post(`/:cid/purchase`, purchaseProduct);
 
 export default router;

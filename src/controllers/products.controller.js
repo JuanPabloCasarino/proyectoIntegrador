@@ -1,10 +1,10 @@
 import express from 'express';
 import session from "express-session"
 import {Router,query} from 'express';
-import {ProductManagerDB} from '../dao/managers/DB/ProductManager.db.js';
+import {ProductServiceDB} from '../services/productServices.js';
 import mongoosePaginate from 'mongoose-paginate-v2';
 
-const products = new ProductManagerDB();
+const products = new ProductServiceDB();
 const path = 'products';
 
 const getProducts = async (req, res) => {

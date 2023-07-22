@@ -9,18 +9,16 @@ import {
   deleteProduct
 } from '../controllers/products.controller.js'
 
-const path = 'products';
-
 const router = Router();
 
-router.get(`/${path}`, getProducts);
+router.get(`/`, getProducts);
 
-router.get(`/${path}/:id`, getProductsById);
+router.get(`/:id`, getProductsById);
 
-router.post(`/${path}`, addProduct);
+router.post(`/`, addProduct);
 
-router.put(`/${path}/:id`, updateProduct);
+router.put(`/:id`, updateProduct);
 
-router.delete(`/${path}/:id`, deleteProduct);
+router.delete(`/:id`, deleteProduct);
 
 export default router;

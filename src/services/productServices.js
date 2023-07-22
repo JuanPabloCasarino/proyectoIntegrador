@@ -1,6 +1,6 @@
-import ProductModel from '../../models/product.model.js';
+import ProductModel from '../dao/models/product.model.js';
 
-export class ProductManagerDB {
+export class ProductServiceDB {
   // Llamamos todos los productos
   async getAllProducts(query, options) {
     const products = await ProductModel.paginate(query, options);

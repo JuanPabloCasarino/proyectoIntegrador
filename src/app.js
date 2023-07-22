@@ -16,6 +16,8 @@ import productsRouter from './router/products.routes.js';
 import cartRouter from './router/carts.routes.js';
 import viewsRouter from './router/views.routes.js';
 import sessionsRouter from './router/sessions.router.js';
+import businessRouter from './router/business.router.js';
+import orderRouter from './router/order.router.js';
 
 const publics = path.join(__dirname, './public');
 
@@ -37,10 +39,12 @@ app.use(express.urlencoded({
 }));
 
 
-app.use('/api',productsRouter);
-app.use('/api',cartRouter);
-app.use('/',viewsRouter);
+app.use('/api/products',productsRouter);
+app.use('/api/carts',cartRouter);
+app.use('/api',viewsRouter);
 app.use('/api/sessions',sessionsRouter);
+app.use('/api/order', orderRouter)
+app.use('/api/business', businessRouter)
 
 //Configuracion de handlebars
 app.engine('handlebars', engine())
