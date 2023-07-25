@@ -9,6 +9,7 @@ const productService = new ProductServiceDB();
 const getAllCarts = async (req, res) => {
   try {
     const carts = await cartsService.getAllCarts();
+    console.log(carts)
     res.status(200).json(carts);
   } catch (error) {
     console.log(error);
@@ -20,7 +21,7 @@ const getCartById = async (req, res) => {
   } = req.params;
   try {
     const cart = await cartsService.getCartById(cid);
-    console.log(JSON.stringify(cart, null, '\t'));
+    // console.log(JSON.stringify(cart, null, '\t'));
     console.log(JSON.stringify(cart.products, null, '\t'));
     res.render('productsOnCart', cart)
   } catch (error) {
@@ -106,6 +107,7 @@ const purchaseProduct = async (req, res) => {
   try {
     // Buscar el carrito por su ID
     const cart = await cartsService.getCartById(cartId);
+    console.log(cart.products);
 
     // Si el carrito no existe, enviar un error
     if (!cart) {

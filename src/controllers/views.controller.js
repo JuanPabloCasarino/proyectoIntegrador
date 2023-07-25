@@ -5,6 +5,7 @@ import UserModel from '../dao/models/user.model.js';
 import initializePassport from '../config/passport.config.js'
 import {passportCall} from '../utils.js';
 import config from '../config/config.js';
+import { userDto } from '../DTO/userDto.js';
 
 // Middleware para validar rutas privadas
 const privateRoute = (req, res, next) => {
@@ -65,7 +66,7 @@ const failLogin = async (req, res) => {
         error: 'Failed'
     })
 }
-const getProfile = (req, res) => {
+const getProfile = async (req, res) => {
     if (!req.session.user) {
         res.redirect('/login');
     } else {
@@ -85,12 +86,18 @@ const getProfile = (req, res) => {
         });
     }
 }
-const logout = (req, res) => {
+const logout = async (req, res) => {
     req.session.destroy();
     res.redirect('/login');
 }
-const current = (req, res) => {
-    res.status(200).send(req.user);
+const current = async (req, res) => {
+    if (!req.session.user) {
+        res.redirect('/login');
+    } else {
+        const userResponse = await userDto(req.session.user)
+        res.status(200).send(userResponse);
+    }
+    
 }
 
 export {

@@ -43,7 +43,7 @@ app.use('/api/products',productsRouter);
 app.use('/api/carts',cartRouter);
 app.use('/',viewsRouter);
 app.use('/api/sessions',sessionsRouter);
-app.use('/api/order', orderRouter)
+app.use('/api/orders', orderRouter)
 app.use('/api/business', businessRouter)
 
 //Configuracion de handlebars

@@ -38,4 +38,9 @@ export class ProductServiceDB {
 
     return productDelete;
   }
+  async updateStock(id, quantity){
+    const product = await ProductModel.findOne({ _id: id });
+
+    
+  }
 }

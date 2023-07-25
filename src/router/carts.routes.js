@@ -11,11 +11,12 @@ import {
   updateProductToCart,
   purchaseProduct
 } from '../controllers/carts.controller.js';
+import {isAdmin, isUser} from '../middlewares/sessionAccess.js';
 
 const router = Router();
 
 //Obtengo todos los carritos
-router.get(`/`, getAllCarts);
+router.get(`/`, getAllCarts );
 
 //Muestro los productos de un carrito por su ID
 router.get(`/:cid`, getCartById);
@@ -24,7 +25,7 @@ router.get(`/:cid`, getCartById);
 router.post(`/`, createCart);
 
 //Agrego un producto a un carrito
-router.post(`/:cid/products/:pid`, addProductToCart);
+router.post(`/:cid/products/:pid`, isUser, addProductToCart);
 
 // Eliminamos un producto del carrito
 router.delete(`/:cid/products/:pid`, deleteProduct);

@@ -9,6 +9,7 @@ import {
   deleteProduct
 } from '../controllers/products.controller.js'
 import passportConfig from '../config/passport.config.js';
+import {isAdmin, isUser} from '../middlewares/sessionAccess.js';
 
 const router = Router();
 
@@ -16,10 +17,10 @@ router.get(`/`, getProducts);
 
 router.get(`/:id`, getProductsById);
 
-router.post(`/`, addProduct);
+router.post(`/`, isAdmin, addProduct);
 
-router.put(`/:id`, updateProduct);
+router.put(`/:id`,isAdmin, updateProduct);
 
-router.delete(`/:id`, deleteProduct);
+router.delete(`/:id`,isAdmin, deleteProduct);
 
 export default router;
