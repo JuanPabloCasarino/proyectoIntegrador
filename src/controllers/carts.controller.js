@@ -1,15 +1,25 @@
-import {CartServiceDB} from '../services/cartServices.js';
-import {ProductServiceDB} from '../services/productServices.js';
+import {
+  CartServiceDB
+} from '../services/cartServices.js';
+import {
+  ProductServiceDB
+} from '../services/productServices.js';
+import {
+  TicketServiceDB
+} from '../services/ticketService.js';
+import {
+  userDto
+} from '../DTO/userDto.js';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import express from 'express';
 
 const cartsService = new CartServiceDB();
 const productService = new ProductServiceDB();
+const ticketService = new TicketServiceDB();
 
 const getAllCarts = async (req, res) => {
   try {
     const carts = await cartsService.getAllCarts();
-    console.log(carts)
     res.status(200).json(carts);
   } catch (error) {
     console.log(error);
@@ -21,9 +31,15 @@ const getCartById = async (req, res) => {
   } = req.params;
   try {
     const cart = await cartsService.getCartById(cid);
-    // console.log(JSON.stringify(cart, null, '\t'));
-    console.log(JSON.stringify(cart.products, null, '\t'));
-    res.render('productsOnCart', cart)
+    const quantity = await (cart.products[0].quantity);
+    let resp;
+    const allProducts = [];
+    for (let i = 0; i < cart.products.length; i++) {
+      resp = await productService.getProductById(cart.products[i].product);
+      allProducts.push(resp);
+      console.log(resp);
+    }
+    res.render('productsOnCart', resp)
   } catch (error) {
     console.log(error);
   }
@@ -39,7 +55,10 @@ const createCart = async (req, res) => {
 }
 
 const addProductToCart = async (req, res) => {
-  const {cid,pid} = req.params;
+  const {
+    cid,
+    pid
+  } = req.params;
 
   try {
     const carts = await cartsService.addProductToCart(cid, pid);
@@ -91,8 +110,13 @@ const updateProduct = async (req, res) => {
 }
 
 const updateProductToCart = async (req, res) => {
-  const {cid,pid} = req.params;
-  const {quantity} = req.body
+  const {
+    cid,
+    pid
+  } = req.params;
+  const {
+    quantity
+  } = req.body
   try {
     const cart = await cartsService.updateProductToCart(cid, pid, quantity);
 
@@ -101,44 +125,66 @@ const updateProductToCart = async (req, res) => {
     console.log(error);
   }
 }
-const purchaseProduct = async (req, res) => {
-  const cartId = req.params.cid;
-
+const confirmCart = async (req, res) => {
+  const {
+    cid
+  } = req.params;
   try {
-    // Buscar el carrito por su ID
-    const cart = await cartsService.getCartById(cartId);
-    console.log(cart.products);
-
-    // Si el carrito no existe, enviar un error
-    if (!cart) {
-      return res.status(404).json({ message: 'Carrito no encontrado' });
-    }
-
-    /*
-    for (const cartItem of cart.products) {
-      const product = cartItem.product;
-      const requestedQuantity = cartItem.quantity;
-
-      // Verificar si hay suficiente stock del producto
-      if (product.stock >= requestedQuantity) {
-        // Restar la cantidad solicitada del stock del producto
-        product.stock -= requestedQuantity;
-        await product.save();
-      } else {
-        // Si no hay suficiente stock, no agregar el producto al proceso de compra
-        return res.status(400).json({ message: `No hay suficiente stock para el producto: ${product.name}` });
+    if (!req.session.user) {
+      res.redirect('/login');
+    } else {
+      const cart = await cartsService.getCartById(cid);
+      let resp;
+      let sum = 0;
+      for (let i = 0; i < cart.products.length; i++) {
+        resp = await productService.getProductById(cart.products[i].product)
       }
+      const title = resp.title;
+      const price = resp.price;
+      res.render('confirm', {title,price,cid})
     }
-    */  
-    // Marcar el carrito como finalizado o eliminarlo, según tus necesidades
-    cart.isPurchased = true;
-    await cart.save();
 
-    res.status(200).json({ message: 'Compra finalizada exitosamente' });
   } catch (error) {
-    console.error('Error en la compra:', error);
-    res.status(500).json({ message: 'Error en el servidor al procesar la compra' });
+    console.log(error);
   }
+}
+
+const purchaseProduct = async (req, res) => {
+  const cid = req.params.cid;
+  if (!req.session.user) {
+    res.redirect('/login');
+  } else {
+    try {
+      const userResponse = await userDto(req.session.user)
+      const cart = await cartsService.getCartById(cid);
+      if (!cart) {
+        return res.status(404).json({
+          message: 'Carrito no encontrado'
+        });
+      }
+      let resp;
+      let sum = 0;
+      for (let i = 0; i < cart.products.length; i++) {
+        resp = await productService.getProductById(cart.products[i].product)
+        const quantity = await (cart.products[i].quantity);
+        sum = sum + (resp.price * quantity);
+        console.log(resp.title + ': ' + resp.price)
+      }
+      const newTicket = {
+        amount: sum,
+        purchaser: userResponse.email
+      }
+      const ticketResult = await ticketService.createTicket(newTicket)
+      console.log(ticketResult)
+      res.status(200).send('Compra finalizada exitosamente, el ticket es: ' + ticketResult);
+    } catch (error) {
+      console.error('Error en la compra:', error);
+      res.status(500).json({
+        message: 'Error en el servidor al procesar la compra'
+      });
+    }
+  }
+
 }
 
 export {
@@ -150,5 +196,6 @@ export {
   deleteAllProducts,
   updateProduct,
   updateProductToCart,
-  purchaseProduct
+  purchaseProduct,
+  confirmCart
 };

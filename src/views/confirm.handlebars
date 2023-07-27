@@ -1,0 +1,16 @@
+<div class="d-flex justify-content-evenly flex-row mb-3">
+    <div class="card text-center" style="width: 20%">
+        <div class="card-body">
+            <h5 class="card-title">{{title}}</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">{{resp.category}}</h6>
+            <p class="card-text">{{this.description}}</p>
+            <p class="card-text">${{this.price}}</p>
+            <p class="card-text">Stock: {{this.stock}}</p>
+        </div>
+    </div>
+    <form class="row g-3 m-2" action="http://localhost:8080/api/carts/{{cid}}/purchase" method="post">
+        <div class="col-md-12">
+            <button type="submit" class="btn btn-success">Confirmar</button>
+        </div>
+    </form>
+</div>
