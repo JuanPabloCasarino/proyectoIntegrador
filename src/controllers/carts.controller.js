@@ -12,6 +12,8 @@ import {
 } from '../DTO/userDto.js';
 import mongoosePaginate from 'mongoose-paginate-v2';
 import express from 'express';
+import nodemailer from 'nodemailer'
+import transport from '../middlewares/mailing.js'; 
 
 const cartsService = new CartServiceDB();
 const productService = new ProductServiceDB();
@@ -31,7 +33,7 @@ const getCartById = async (req, res) => {
   } = req.params;
   try {
     const cart = await cartsService.getCartById(cid);
-    const quantity = await (cart.products[0].quantity);
+    const quantity = await (cart.products.quantity);
     let resp;
     const allProducts = [];
     for (let i = 0; i < cart.products.length; i++) {
@@ -175,7 +177,14 @@ const purchaseProduct = async (req, res) => {
         purchaser: userResponse.email
       }
       const ticketResult = await ticketService.createTicket(newTicket)
-      console.log(ticketResult)
+
+      let result = await transport.sendMail({
+        from: "juan21casarino@gmail.com",
+        to: userResponse.email,
+        subject: 'Ticket de compra:'+ticketResult.title,
+        html: '<div><h1>Ticket de compra</h1></div><div><p>Gracias por confiar en nosotros! La suma total fue '+sum+'</p></div>',
+        attachments:''
+      })
       res.status(200).send('Compra finalizada exitosamente, el ticket es: ' + ticketResult);
     } catch (error) {
       console.error('Error en la compra:', error);

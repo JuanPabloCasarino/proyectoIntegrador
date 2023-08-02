@@ -3,6 +3,7 @@ import session from "express-session"
 import {Router,query} from 'express';
 import {ProductServiceDB} from '../services/productServices.js';
 import mongoosePaginate from 'mongoose-paginate-v2';
+import { generateProducts } from '../middlewares/generateProduct.js';
 
 const products = new ProductServiceDB();
 const path = 'products';
@@ -92,10 +93,22 @@ const deleteProduct = async (req, res) => {
     }
 }
 
+const mockingProducts = async (req, res) => {
+    try{
+        for(let i = 0; i <50; i++) {
+            const resProducts = await products.addProduct(generateProducts())
+        }
+    res.status(200).json(mockingProducts);
+    }catch(err){
+        console.log(err);
+    }
+}
+
 export {
     getProducts,
     getProductsById,
     addProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    mockingProducts
 }

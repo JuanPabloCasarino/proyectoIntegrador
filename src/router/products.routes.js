@@ -6,7 +6,8 @@ import {
   getProductsById,
   addProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  mockingProducts
 } from '../controllers/products.controller.js'
 import passportConfig from '../config/passport.config.js';
 import {isAdmin, isUser} from '../middlewares/sessionAccess.js';
@@ -22,5 +23,7 @@ router.post(`/`, isAdmin, addProduct);
 router.put(`/:id`,isAdmin, updateProduct);
 
 router.delete(`/:id`,isAdmin, deleteProduct);
+
+router.get(`/mockingProducts`, mockingProducts); 
 
 export default router;
