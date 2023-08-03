@@ -1,9 +1,16 @@
 import express from 'express';
 import session from "express-session"
-import {Router,query} from 'express';
-import {ProductServiceDB} from '../services/productServices.js';
+import {
+    Router,
+    query
+} from 'express';
+import {
+    ProductServiceDB
+} from '../services/productServices.js';
 import mongoosePaginate from 'mongoose-paginate-v2';
-import { generateProducts } from '../middlewares/generateProduct.js';
+import {
+    generateProducts
+} from '../middlewares/generateProduct.js';
 
 const products = new ProductServiceDB();
 const path = 'products';
@@ -28,13 +35,21 @@ const getProducts = async (req, res) => {
         };
 
         if (status != undefined) {
-            const resProducts = await products.getAllProducts({status: status}, options);
-            return res.json({resProducts});
+            const resProducts = await products.getAllProducts({
+                status: status
+            }, options);
+            return res.json({
+                resProducts
+            });
         }
 
         if (category != undefined) {
-            const resProducts = await products.getAllProducts({category: category}, options);
-            return res.json({resProducts});
+            const resProducts = await products.getAllProducts({
+                category: category
+            }, options);
+            return res.json({
+                resProducts
+            });
         }
 
         const result = await products.getAllProducts({}, options);
@@ -94,12 +109,14 @@ const deleteProduct = async (req, res) => {
 }
 
 const mockingProducts = async (req, res) => {
-    try{
-        for(let i = 0; i <50; i++) {
+    try {
+        let productsGen = []
+        for(let i = 0; i < 50; i++){
             const resProducts = await products.addProduct(generateProducts())
+            productsGen.push(resProducts)
         }
-    res.status(200).json(mockingProducts);
-    }catch(err){
+        res.status(200).json(productsGen);
+    } catch (err) {
         console.log(err);
     }
 }

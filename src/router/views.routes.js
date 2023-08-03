@@ -14,6 +14,7 @@ import {
     current,
 } from '../controllers/views.controller.js';
 
+
 const router = Router();
 
 router.get('/register', publicRoute, getRegister )

@@ -1,11 +1,17 @@
+//Imports de librerias y DAO
 import {Router} from 'express';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import UserModel from '../dao/models/user.model.js';
+//Imports de middlewares
 import initializePassport from '../config/passport.config.js'
 import {passportCall} from '../utils.js';
 import config from '../config/config.js';
 import { userDto } from '../DTO/userDto.js';
+// Imports de Custom errors
+import customError from '../services/errors/CustomError.js';
+import EErors from '../services/errors/enum.js';
+import { generateUserErrorInfo } from '../services/errors/info.js';
 
 // Middleware para validar rutas privadas
 const privateRoute = (req, res, next) => {
@@ -30,6 +36,15 @@ const getRegister = (req, res) => {
     })
 }
 const postRegister = async (req, res) => {
+    const { firstname, lastname, email } = req.body;
+    if(!firstname || !lastname || !email){
+        customError.createError({
+            name: "User Creation Error",
+            cause: generateUserErrorInfo({firstname, lastname, email}),
+            message: "Error trying to create user",
+            code:EErors.INVALID_TYPE_ERROR
+        })
+    }
     res.redirect('/login');
 }
 const failRegister = async (req, res) => {

@@ -5,6 +5,9 @@ import {createHash,isValidPassword} from '../utils.js';
 import GitHubStrategy from 'passport-github2';
 import jwt from 'passport-jwt';
 import config from './config.js';
+import customError from '../services/errors/CustomError.js';
+import EErors from '../services/errors/enum.js';
+import { generateUserErrorInfo } from '../services/errors/info.js';
 
 const JWTStrategy = jwt.Strategy;
 const ExtractJWT = jwt.ExtractJwt;
@@ -18,25 +21,6 @@ const initializePassport = () => {
         } 
         return token;
     }
-    const  isAdmin = async (req, res, next) => {
-        const user = await req.user; 
-      
-        if (!user || user.rol !== 'admin') {
-          return res.status(403).json({ error: 'Access denied. Admins only.' });
-        }
-      
-        next();
-      }
-      
-      const  isUser = async (req, res, next) => {
-        const user = await req.user; 
-      
-        if (!user || user.rol !== 'usuario') {
-          return res.status(403).json({ error: 'Access denied. Users only.' });
-        }
-      
-        next();
-      }
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest:ExtractJWT.fromExtractors([cookieExtractor]),
         secretOrKey:config.secretOrKey,
@@ -70,10 +54,19 @@ const initializePassport = () => {
                 password: createHash(password),
                 rol: 'usuario',
             }
+            
             let result = await UserModel.create(newUser)
             return done(null, result)
         } catch (error) {
-            return done('Error al obtener el usuario: ' + error)
+            if(!firstname || !lastname || !email){
+                customError.createError({
+                    name: "User Creation Error",
+                    cause: generateUserErrorInfo({firstname, lastname, email}),
+                    message: "Error trying to create user",
+                    code:EErors.INVALID_TYPE_ERROR
+                })
+            }
+            return done("El error es"+ error)
         }
     }))
 

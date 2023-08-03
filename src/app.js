@@ -18,6 +18,8 @@ import viewsRouter from './router/views.routes.js';
 import sessionsRouter from './router/sessions.router.js';
 import businessRouter from './router/business.router.js';
 import orderRouter from './router/order.router.js';
+import { mockingProducts } from './controllers/products.controller.js';
+import errorHandler from "./middlewares/errors/info.js";
 
 const publics = path.join(__dirname, './public');
 
@@ -37,6 +39,7 @@ app.use(passport.initialize());
 app.use(express.urlencoded({
     extended: true
 }));
+app.use(errorHandler);
 
 
 app.use('/api/products',productsRouter);
@@ -45,6 +48,7 @@ app.use('/',viewsRouter);
 app.use('/api/sessions',sessionsRouter);
 app.use('/api/orders', orderRouter)
 app.use('/api/business', businessRouter)
+app.use('/api/mockingProducts', mockingProducts)
 
 //Configuracion de handlebars
 app.engine('handlebars', engine())

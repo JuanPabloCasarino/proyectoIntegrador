@@ -1,4 +1,5 @@
 import ProductModel from '../dao/models/product.model.js';
+import { mockingProducts } from '../controllers/products.controller.js';
 
 export class ProductServiceDB {
   // Llamamos todos los productos
