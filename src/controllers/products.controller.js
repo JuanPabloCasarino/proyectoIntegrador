@@ -12,6 +12,7 @@ import {
     generateProducts
 } from '../middlewares/generateProduct.js';
 import isValid from '../middlewares/errors/prodValidation.js';
+import log from '../config/loggers/customLogger.js';
 
 const products = new ProductServiceDB();
 const path = 'products';
@@ -60,7 +61,7 @@ const getProducts = async (req, res) => {
         result.isValid = !(page <= 0 || page > result.totalPages)
         res.render('products', result)
     } catch (error) {
-        console.log(error);
+        log.fatal(error);
     }
 }
 
@@ -72,7 +73,7 @@ const getProductsById = async (req, res) => {
         const result = await products.getProductById(id);
         res.render('singleProduct', result)
     } catch (error) {
-        console.log(error);
+        log.fatal(error);
     }
 }
 const addProduct = async (req, res) => {
@@ -81,7 +82,7 @@ const addProduct = async (req, res) => {
         const resProducts = await products.addProduct(body);
         res.status(200).json(resProducts);
     } catch (error) {
-        console.log(error);
+        log.fatal(error);
     }
 }
 
@@ -94,7 +95,7 @@ const updateProduct = async (req, res) => {
         const resProducts = await products.updateProduct(id, body);
         res.status(200).json(resProducts);
     } catch (error) {
-        console.log(error);
+        log.fatal(error);
     }
 }
 const deleteProduct = async (req, res) => {
@@ -105,7 +106,7 @@ const deleteProduct = async (req, res) => {
         const resProduct = await products.deleteProduct(id);
         res.status(200).json(resProduct);
     } catch (error) {
-        console.log(error);
+        log.fatal(error);
     }
 }
 
@@ -117,8 +118,8 @@ const mockingProducts = async (req, res) => {
             productsGen.push(resProducts)
         }
         res.status(200).json(productsGen);
-    } catch (err) {
-        console.log(err);
+    } catch (error) {
+        log.fatal(error);
     }
 }
 

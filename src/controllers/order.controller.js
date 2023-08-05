@@ -1,6 +1,7 @@
 import {orderServicesDB} from '../services/orderServices.js';
 import userServicesDB from '../services/userServices.js';
 import businessServicesDB from '../services/businesServices.js';
+import log from '../config/loggers/customLogger.js';
 
 const order = new orderServicesDB();
 const user = new userServicesDB();
@@ -24,7 +25,7 @@ const createOrder = async(req, res) => {
 
     try {
         let actualOrders = resultBusiness.products.filter( pr => product.includes(pr.id));
-        console.log(actualOrders)
+        log.debug(actualOrders)
         if(!actualOrders) {
             return res.status(400).send("Algun producto no corresponde!");
         }
@@ -44,14 +45,13 @@ const createOrder = async(req, res) => {
             products: actualOrders.map(pr => pr.id),
             totalPrice: sum
         };
-
-        console.log(newOrder);
+        log.debug(newOrder);
         const orderResult = await order.createOrder(newOrder);
 
         await user.updateOrderByUserId(userId, orderResult._id);
         res.status(200).send({status: "Success", orderResult});
     } catch (e) {
-        console.log("error - create Order", e);
+        log.error("error - create Order", e);
         res.status(500).send("error al crear la orden");
     }
 };
@@ -64,7 +64,7 @@ const resolveORder = async(req, res) => {
         await order.updateOrderById(id, resolve);
         res.status(200).send({status: "Success", result: "Order resolved"});
     } catch (e) {
-        console.log("Error - resolve Order");
+        log.error("Error - resolve Order");
         res.status(500).send("Error al actualizar la orden");
     }
 }

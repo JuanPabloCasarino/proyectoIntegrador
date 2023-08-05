@@ -12,6 +12,7 @@ import {
     getProfile,
     logout,
     current,
+    loggerTesting
 } from '../controllers/views.controller.js';
 
 
@@ -35,6 +36,8 @@ router.get('/profile', privateRoute, getProfile);
 router.get('/logout', privateRoute, logout);
 
 router.get('/current', passport.authenticate('jwt', {session: false}), current)
+
+router.get('/loggerTest', loggerTesting);
 
 
 export default router;

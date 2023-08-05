@@ -12,6 +12,7 @@ import { userDto } from '../DTO/userDto.js';
 import customError from '../services/errors/CustomError.js';
 import EErors from '../services/errors/enum.js';
 import { generateUserErrorInfo } from '../services/errors/info.js';
+import log from '../config/loggers/customLogger.js';
 
 // Middleware para validar rutas privadas
 const privateRoute = (req, res, next) => {
@@ -47,8 +48,8 @@ const postRegister = async (req, res) => {
     }
     res.redirect('/login');
 }
-const failRegister = async (req, res) => {
-    console.log('Failed Strategy');
+const failRegister = async (req, res) => { 
+    log.warn('Failed Strategy');
     res.send({
         error: 'Failed'
     })
@@ -73,10 +74,10 @@ const postLogin = async (req, res) => {
         maxAge: 60 * 60 * 1000,
         httpOnly: true
     }).redirect('profile');
-    console.log("Bienvenido, has entrado a tu perfil");
+    log.debug("Bienvenido, has entrado a tu perfil");
 }
 const failLogin = async (req, res) => {
-    console.log('Failed login');
+    log.warn('Failed login');
     res.send({
         error: 'Failed'
     })
@@ -115,6 +116,21 @@ const current = async (req, res) => {
     
 }
 
+const loggerTesting = async (req, res) => {
+    try{
+        log.debug('Debug log Testing');
+        log.http('HTTP log Testing');
+        log.info('Info log Testing');
+        log.warn('Warning log Testing');
+        log.error('Error log Testing');
+        res.json("Probando logs")
+    }catch(e){
+        log.fatal('Fatal log Testing');
+    }
+    
+
+}
+
 export {
     privateRoute,
     publicRoute,
@@ -126,5 +142,6 @@ export {
     failLogin,
     getProfile,
     logout,
-    current
+    current,
+    loggerTesting
 }

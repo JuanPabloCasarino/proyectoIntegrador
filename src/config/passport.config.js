@@ -9,6 +9,7 @@ import customError from '../services/errors/CustomError.js';
 import EErors from '../services/errors/enum.js';
 import { generateUserErrorInfo } from '../services/errors/info.js';
 import { stringify } from 'uuid';
+import log from '../config/loggers/customLogger.js'
 
 const JWTStrategy = jwt.Strategy;
 const ExtractJWT = jwt.ExtractJwt;
@@ -44,7 +45,7 @@ const initializePassport = () => {
                 email: username
             })
             if (user) {
-                console.log('El usuario ya existe');
+                log.warn('El usuario ya existe');
                 return done(null, false)
             }
             const newUser = {
@@ -74,7 +75,7 @@ const initializePassport = () => {
     }))
 
     passport.serializeUser ((user, done) => {
-        console.log(user)
+        log.info(user)
         done(null, user._id)
     })
     passport.deserializeUser (async (id, done) => {
@@ -86,7 +87,7 @@ const initializePassport = () => {
         try {
             const user = await UserModel.findOne({email: username});
             if (!user) {
-                console.log('User does not exist')
+                log.info('User does not exist')
                 return done(null, false)
             }
             if (!isValidPassword(user, password)) return done(null, false)
@@ -101,7 +102,7 @@ const initializePassport = () => {
         callbackURL: config.callbackURL
     }, async (accessToken, refreshToken,profile, done) => {
         try{
-            console.log(profile);
+            log.info(profile);
             let user = await UserModel.findOne({email:profile._json.name})
             if (!user){
                 const  email = profile._json.email ? profile.json.email : "Not mail";

@@ -21,6 +21,7 @@ import orderRouter from './router/order.router.js';
 import { mockingProducts } from './controllers/products.controller.js';
 import errorHandler from "./middlewares/errors/info.js";
 import customError from './services/errors/CustomError.js';
+import log from './config/loggers/customLogger.js';
 
 const publics = path.join(__dirname, './public');
 
@@ -42,7 +43,7 @@ app.use(express.urlencoded({
 }));
 app.use((err, req, res, next) => {
     if(err instanceof customError) {
-        console.error('Custom error:'+err.message);
+        log.error('Custom error:'+err.message);
         return res.status(400).json({
             status: 'error',
             message: err.message,
@@ -72,10 +73,10 @@ app.set('view engine', 'handlebars');
 
 app.listen(config.port, (err) => {
     if (err) {
-        console.log("Connection error", err);
+        log.error("Connection error", err);
         return;
     }
-    console.log("Server listening on port " + config.port);
+    log.info("Server listening on port " + config.port);
 })
 
 
