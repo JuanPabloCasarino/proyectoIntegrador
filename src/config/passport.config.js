@@ -8,6 +8,7 @@ import config from './config.js';
 import customError from '../services/errors/CustomError.js';
 import EErors from '../services/errors/enum.js';
 import { generateUserErrorInfo } from '../services/errors/info.js';
+import { stringify } from 'uuid';
 
 const JWTStrategy = jwt.Strategy;
 const ExtractJWT = jwt.ExtractJwt;
@@ -57,16 +58,18 @@ const initializePassport = () => {
             
             let result = await UserModel.create(newUser)
             return done(null, result)
-        } catch (error) {
+        } catch (e) {
+            let errors = []
             if(!firstname || !lastname || !email){
-                customError.createError({
+                 const error = customError.createError({
                     name: "User Creation Error",
                     cause: generateUserErrorInfo({firstname, lastname, email}),
                     message: "Error trying to create user",
                     code:EErors.INVALID_TYPE_ERROR
                 })
+                errors.push(error)
             }
-            return done("El error es"+ error)
+            return done(errors)
         }
     }))
 

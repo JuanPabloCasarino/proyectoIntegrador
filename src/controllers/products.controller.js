@@ -11,6 +11,7 @@ import mongoosePaginate from 'mongoose-paginate-v2';
 import {
     generateProducts
 } from '../middlewares/generateProduct.js';
+import isValid from '../middlewares/errors/prodValidation.js';
 
 const products = new ProductServiceDB();
 const path = 'products';

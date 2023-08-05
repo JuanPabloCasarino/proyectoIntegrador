@@ -11,6 +11,7 @@ import {
 } from '../controllers/products.controller.js'
 import passportConfig from '../config/passport.config.js';
 import {isAdmin, isUser} from '../middlewares/sessionAccess.js';
+import isValid from '../middlewares/errors/prodValidation.js';
 
 const router = Router();
 
@@ -18,7 +19,7 @@ router.get(`/`, getProducts);
 
 router.get(`/:id`, getProductsById);
 
-router.post(`/`, isAdmin, addProduct);
+router.post(`/`, isValid, addProduct);
 
 router.put(`/:id`,isAdmin, updateProduct);
 

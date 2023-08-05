@@ -20,6 +20,7 @@ import businessRouter from './router/business.router.js';
 import orderRouter from './router/order.router.js';
 import { mockingProducts } from './controllers/products.controller.js';
 import errorHandler from "./middlewares/errors/info.js";
+import customError from './services/errors/CustomError.js';
 
 const publics = path.join(__dirname, './public');
 
@@ -39,7 +40,21 @@ app.use(passport.initialize());
 app.use(express.urlencoded({
     extended: true
 }));
-app.use(errorHandler);
+app.use((err, req, res, next) => {
+    if(err instanceof customError) {
+        console.error('Custom error:'+err.message);
+        return res.status(400).json({
+            status: 'error',
+            message: err.message,
+            code: err.code
+        })
+}
+console.error('Unhandled error: '+ err);
+res.status(500).json({
+    status: 'error',
+    message: 'Error interno del servidor'
+})
+});
 
 
 app.use('/api/products',productsRouter);

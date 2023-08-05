@@ -19,10 +19,6 @@ export class ProductServiceDB {
   async addProduct(product) {
     const { title, price, description, thumbnail, status, stock, code, category } = product;
 
-    const checkProductInfo = Object.values(product).includes(undefined);
-
-    if (checkProductInfo) return 'Faltan propiedades al producto';
-
     const newProduct = await ProductModel.create(product);
     return newProduct;
   }
