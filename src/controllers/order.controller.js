@@ -2,6 +2,7 @@ import {orderServicesDB} from '../services/orderServices.js';
 import userServicesDB from '../services/userServices.js';
 import businessServicesDB from '../services/businesServices.js';
 import log from '../config/loggers/customLogger.js';
+import { error } from 'winston';
 
 const order = new orderServicesDB();
 const user = new userServicesDB();
@@ -50,8 +51,8 @@ const createOrder = async(req, res) => {
 
         await user.updateOrderByUserId(userId, orderResult._id);
         res.status(200).send({status: "Success", orderResult});
-    } catch (e) {
-        log.error("error - create Order", e);
+    } catch (error) {
+        log.error("error - create Order", error);
         res.status(500).send("error al crear la orden");
     }
 };
@@ -63,9 +64,9 @@ const resolveORder = async(req, res) => {
 
         await order.updateOrderById(id, resolve);
         res.status(200).send({status: "Success", result: "Order resolved"});
-    } catch (e) {
-        log.error("Error - resolve Order");
-        res.status(500).send("Error al actualizar la orden");
+    } catch (error) {
+        log.error("Error - resolve Order", error);
+        res.status(500).send("Error al mandar la orden la orden");
     }
 }
 

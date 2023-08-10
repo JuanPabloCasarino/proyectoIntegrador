@@ -38,15 +38,21 @@ const getRegister = (req, res) => {
 }
 const postRegister = async (req, res) => {
     const { firstname, lastname, email } = req.body;
-    if(!firstname || !lastname || !email){
-        customError.createError({
-            name: "User Creation Error",
-            cause: generateUserErrorInfo({firstname, lastname, email}),
-            message: "Error trying to create user",
-            code:EErors.INVALID_TYPE_ERROR
-        })
+    try {
+        if(!firstname || !lastname || !email){
+            customError.createError({
+                name: "User Creation Error",
+                cause: generateUserErrorInfo({firstname, lastname, email}),
+                message: "Error trying to create user",
+                code:EErors.INVALID_TYPE_ERROR
+            })
+        }
+        res.redirect('/login');
+    } catch (error) {
+        log.error(error);
+        res.status(500).json({error:error.message});
     }
-    res.redirect('/login');
+    
 }
 const failRegister = async (req, res) => { 
     log.warn('Failed Strategy');
@@ -60,21 +66,21 @@ const getLogin = (req, res) => {
 }
 const postLogin = async (req, res) => {
     req.session.user = req.user;
-    const {
-        email,
-        password
-    } = req.body;
-    const token = jwt.sign({
-        email,
-        password
-    }, config.secretOrKey, {
+    const {email,password} = req.body;
+    const token = jwt.sign({email,password}, config.secretOrKey, {
         expiresIn: '1h'
     });
-    res.cookie('coderCookieToken', token, {
-        maxAge: 60 * 60 * 1000,
-        httpOnly: true
-    }).redirect('profile');
-    log.debug("Bienvenido, has entrado a tu perfil");
+    try {
+        res.cookie('coderCookieToken', token, {
+            maxAge: 60 * 60 * 1000,
+            httpOnly: true
+        }).redirect('profile');
+        log.debug("Bienvenido, has entrado a tu perfil");
+        
+    } catch (error) {
+        log.error(error);
+        res.status(500).json({error:error.message});
+    }
 }
 const failLogin = async (req, res) => {
     log.warn('Failed login');
@@ -93,13 +99,19 @@ const getProfile = async (req, res) => {
             age,
             rol
         } = req.session.user;
-        res.render('profile', {
-            firstname,
-            lastname,
-            email,
-            age,
-            rol
-        });
+        try {
+            res.render('profile', {
+                firstname,
+                lastname,
+                email,
+                age,
+                rol
+            });
+            
+        } catch (error) {
+            log.error(error);
+            res.status(500).json({error:error.message});
+        }
     }
 }
 const logout = async (req, res) => {

@@ -8,27 +8,37 @@ const getAllBusiness = async (req, res) => {
 };
 
 const getBusinessById = async (req, res) => {
-    const { id } = req.params;
-    if(!id) {
-        return res.status(400).send("Id es mandatorio!");
+    const {
+        id
+    } = req.params;
+    try {
+        if (!id) {
+            return res.status(400).send("Id es mandatorio!");
+        }
+        const result = await business.getBusinessById(id);
+        res.status(200).send(result);
+
+    } catch (error) {
+        log.error(error);
+        res.status(500).json({error: error.message});
     }
-    const result = await business.getBusinessById(id);
-    res.status(200).send(result);
 }
 
 const insertBusiness = async (req, res) => {
     try {
         const result = await business.create(req.body);
-        res.status(200).send(result);    
-    } catch (e) {
-        log.fatal(e);
-        res.status(500).send(result);
+        res.status(200).send(result);
+    } catch (error) {
+        log.error(error);
+        res.status(500).json({error: error.message});
     }
 }
 
 const addBusinessProduct = async (req, res) => {
-    const {id} = req.params;
-    if(!id) {
+    const {
+        id
+    } = req.params;
+    if (!id) {
         return res.status(400).send("Id es mandatorio");
     }
 
@@ -37,8 +47,8 @@ const addBusinessProduct = async (req, res) => {
         const result = await business.updateBusinessProduct(id, product);
         res.status(200).send(result);
     } catch (error) {
-        log.fatal(e);
-        res.status(500).send("Failed to update");
+        log.error(error);
+        res.status(500).json({error: error.message});
     }
 }
 

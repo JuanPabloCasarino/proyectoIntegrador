@@ -140,7 +140,8 @@ const confirmCart = async (req, res) => {
     }
 
   } catch (error) {
-    log.fatal(error);
+    log.error(error);
+    res.status(500).json({error: error.message});
   }
 }
 
@@ -180,7 +181,7 @@ const purchaseProduct = async (req, res) => {
       })
       res.status(200).send('Compra finalizada exitosamente, el ticket es: ' + ticketResult);
     } catch (error) {
-      log.error('Error en la compra:', error);
+      log.error(error);
       res.status(500).json({
         message: 'Error en el servidor al procesar la compra'
       });
