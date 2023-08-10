@@ -61,7 +61,8 @@ const getProducts = async (req, res) => {
         result.isValid = !(page <= 0 || page > result.totalPages)
         res.render('products', result)
     } catch (error) {
-        log.fatal(error);
+        log.error(error);
+        res.status(500).json({error:error.message});
     }
 }
 
@@ -73,7 +74,8 @@ const getProductsById = async (req, res) => {
         const result = await products.getProductById(id);
         res.render('singleProduct', result)
     } catch (error) {
-        log.fatal(error);
+        log.error(error);
+        res.status(500).json({error:error.message});
     }
 }
 const addProduct = async (req, res) => {
@@ -82,7 +84,8 @@ const addProduct = async (req, res) => {
         const resProducts = await products.addProduct(body);
         res.status(200).json(resProducts);
     } catch (error) {
-        log.fatal(error);
+        log.error(error);
+        res.status(500).json({error:error.message});
     }
 }
 
@@ -95,7 +98,8 @@ const updateProduct = async (req, res) => {
         const resProducts = await products.updateProduct(id, body);
         res.status(200).json(resProducts);
     } catch (error) {
-        log.fatal(error);
+        log.error(error);
+        res.status(500).json({error:error.message});
     }
 }
 const deleteProduct = async (req, res) => {
@@ -106,7 +110,8 @@ const deleteProduct = async (req, res) => {
         const resProduct = await products.deleteProduct(id);
         res.status(200).json(resProduct);
     } catch (error) {
-        log.fatal(error);
+        log.error(error);
+        res.status(500).json({error:error.message});
     }
 }
 
@@ -119,7 +124,8 @@ const mockingProducts = async (req, res) => {
         }
         res.status(200).json(productsGen);
     } catch (error) {
-        log.fatal(error);
+        log.error(error);
+        res.status(500).json({error:error.message});
     }
 }
 

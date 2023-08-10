@@ -30,8 +30,8 @@ const log = winston.createLogger({
             )
         }),
         new winston.transports.File({
-            level: 'warn',
-            filename: 'src/logs/errors.log',
+            level: 'error',
+            filename: 'logs/errors.log',
             format: winston.format.simple()
         })
     ]
