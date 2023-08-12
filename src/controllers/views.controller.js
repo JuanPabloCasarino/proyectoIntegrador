@@ -8,11 +8,16 @@ import initializePassport from '../config/passport.config.js'
 import {passportCall} from '../utils.js';
 import config from '../config/config.js';
 import { userDto } from '../DTO/userDto.js';
+import { createHash, generateToken, validateToken } from '../utils/validation.utils.js';
+import { sendRecoverPassword } from '../utils/mail.utils.js';
 // Imports de Custom errors
 import customError from '../services/errors/CustomError.js';
 import EErors from '../services/errors/enum.js';
 import { generateUserErrorInfo } from '../services/errors/info.js';
 import log from '../config/loggers/customLogger.js';
+
+import userServicesDB from '../services/userServices.js';
+const users = new userServicesDB();
 
 // Middleware para validar rutas privadas
 const privateRoute = (req, res, next) => {
@@ -89,6 +94,7 @@ const failLogin = async (req, res) => {
     })
 }
 const getProfile = async (req, res) => {
+    req.session.user = req.user;
     if (!req.session.user) {
         res.redirect('/login');
     } else {
@@ -143,6 +149,68 @@ const loggerTesting = async (req, res) => {
 
 }
 
+const passwordRecover = async (req, res) => {
+
+    if (!req.user) {
+        log.warn('Tienes que estar logueado para entrar a esta ruta')
+        res.redirect('/login');
+    } else{
+        const { email } = await req.user;
+        if(!email) {
+            return res.status(404).send("Email no enviado");
+        }
+    
+        try {
+            const user = await users.getUserByEmail(email);
+            
+            if(!user) {
+                return res.status(404).send("Usuario no existente!");
+            }
+    
+            const token = generateToken(email);
+            sendRecoverPassword(email, token);
+            res.status(200).send("Reseto de contraseña enviada!");
+        } catch (e) {
+            console.log("Error: ", e);
+            res.status(500).send("Error interno!");
+        }
+    }   
+}
+
+const recoverPassword = (req, res) => {
+    const { token } = req.query;
+    const { email } = req.body;
+    try {
+        const checkToken = validateToken(token);
+        if(!checkToken) {
+            console.log("Invalid token");
+            return res.status(401).send("Acceso denegado!");
+        }
+        const newToken = generateToken(email);           
+        res.render('resetPass')
+
+    } catch (e) {
+        console.log("Error: ", e);
+        res.status(500).send("Error interno!");
+    }
+
+}
+
+const resetPassword = async (req, res) => {
+    const { email, password} = req.body;
+
+    try {
+        const hashedPassword = await createHash(password);
+        await users.updatePasswordByEmail(email, hashedPassword);
+
+       res.render('passReset')
+    } catch (e) {
+        console.log("Error: ", e);
+        res.status(500).send("Error interno!");
+    }
+    
+}
+
 export {
     privateRoute,
     publicRoute,
@@ -155,5 +223,8 @@ export {
     getProfile,
     logout,
     current,
-    loggerTesting
-}
+    loggerTesting,
+    passwordRecover,
+    recoverPassword,
+    resetPassword
+    }

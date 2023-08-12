@@ -78,10 +78,10 @@ const getProductsById = async (req, res) => {
         res.status(500).json({error:error.message});
     }
 }
-const addProduct = async (req, res) => {
+const addProduct = async (req, res, email) => {
     const body = req.body;
     try {
-        const resProducts = await products.addProduct(body);
+        const resProducts = await products.addProduct(body, email);
         res.status(200).json(resProducts);
     } catch (error) {
         log.error(error);

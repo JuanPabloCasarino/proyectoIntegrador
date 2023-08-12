@@ -1,22 +1,32 @@
+import log from "../config/loggers/customLogger.js";
 
-const  isAdmin = async (req, res, next) => {
-  const user = await req.session.user; 
+const  isCapable = async (req, res, next) => {
+  const rol = await req.headers.rol; 
+  const email = await req.headers.email
 
-  if (!user || user.rol !== 'admin') {
-    return res.status(403).json({ error: 'Access denied. Admins only.' });
+  if (rol == 'admin') {
+    log.warn("Has creado el producto como admin")
+    next();
+  } else if (rol == 'premium') {
+    log.warn("Has creado el producto como Premium")
+    next(email);
+  }
+  if(rol !== 'admin' && rol !== 'premium') {
+    log.warn("No tienes los permisos necesarios")
+    return res.status(403).json({ error: 'Access denied. Admin or Premium only.' });
   }
 
-  next();
 }
 
 const  isUser = async (req, res, next) => {
-  const user = await req.session.user; 
+  const rol = await req.headers.rol; 
 
-  if (!user || user.rol !== 'usuario') {
+  if (rol !== 'usuario') {
+    log.warn("No tienes los permisos necesarios")
     return res.status(403).json({ error: 'Access denied. Users only.' });
   }
 
   next();
 }
- 
-export {isAdmin, isUser};
+
+export {isCapable, isUser};

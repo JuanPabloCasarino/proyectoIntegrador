@@ -12,9 +12,12 @@ import {
     getProfile,
     logout,
     current,
-    loggerTesting
-} from '../controllers/views.controller.js';
+    loggerTesting,
+    passwordRecover,
+    recoverPassword,
+    resetPassword} from '../controllers/views.controller.js';
 
+import { isUserOrTokenValid } from '../middlewares/userVerification.js';
 
 const router = Router();
 
@@ -28,7 +31,6 @@ router.get('/login', publicRoute, getLogin);
 
 router.post('/login', passport.authenticate('login', { failureRedirect: '/failLogin' }), publicRoute, postLogin);
 
-
 router.get('/failLogin', failLogin)
 
 router.get('/profile', privateRoute, getProfile);
@@ -36,6 +38,12 @@ router.get('/profile', privateRoute, getProfile);
 router.get('/logout', privateRoute, logout);
 
 router.get('/current', passport.authenticate('jwt', {session: false}), current)
+
+router.get('/passwordRecover', passwordRecover);
+
+router.get('/recoverPassword', recoverPassword);
+
+router.post('/recoverPassword', isUserOrTokenValid ,resetPassword);
 
 router.get('/loggerTest', loggerTesting);
 

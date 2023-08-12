@@ -15,6 +15,14 @@ class userServicesDB {
     updateUserById = async (id, info) => await users.updateOne({_id: id}, {$set: info});
 
     updateOrderByUserId = async (id, orderId) => await users.updateOne({_id: id}, {$push: {orders: orderId}});
+
+    getUserByEmail = async(email) => await users.findOne({email: email});
+
+    updateUserById = async (id, info) => await users.updateOne({_id: id}, {$set: info});
+
+    updatePasswordByEmail = async (email, hashedPassword) => await users.updateOne({email: email}, {$set: {password: hashedPassword}});
+
+    updateOrderByUserId = async (id, orderId) => await users.updateOne({_id: id}, {$push: {orders: orderId}});
 }
 
 export default userServicesDB

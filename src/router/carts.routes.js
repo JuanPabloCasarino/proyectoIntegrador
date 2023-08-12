@@ -12,7 +12,7 @@ import {
   purchaseProduct, 
   confirmCart
 } from '../controllers/carts.controller.js';
-import {isAdmin, isUser} from '../middlewares/sessionAccess.js';
+import {isCapable, isUser} from '../middlewares/sessionAccess.js';
 
 const router = Router();
 

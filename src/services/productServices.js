@@ -16,10 +16,10 @@ export class ProductServiceDB {
   }
 
   // Agregamos un producto a nuestra base de datos
-  async addProduct(product) {
+  async addProduct(product, owner) {
     const { title, price, description, thumbnail, status, stock, code, category } = product;
-
-    const newProduct = await ProductModel.create(product);
+    log.info(owner)
+    const newProduct = await ProductModel.create(product, owner);
     return newProduct;
   }
 
