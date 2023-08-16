@@ -1,18 +1,12 @@
 import express from 'express';
 import session from "express-session"
-import {
-    Router,
-    query
-} from 'express';
-import {
-    ProductServiceDB
-} from '../services/productServices.js';
+import {Router,query} from 'express';
+import {ProductServiceDB} from '../services/productServices.js';
 import mongoosePaginate from 'mongoose-paginate-v2';
-import {
-    generateProducts
-} from '../middlewares/generateProduct.js';
+import {generateProducts} from '../middlewares/generateProduct.js';
 import isValid from '../middlewares/errors/prodValidation.js';
 import log from '../config/loggers/customLogger.js';
+import { decodeToken } from '../utils/validation.utils.js';
 
 const products = new ProductServiceDB();
 const path = 'products';
@@ -78,8 +72,11 @@ const getProductsById = async (req, res) => {
         res.status(500).json({error:error.message});
     }
 }
-const addProduct = async (req, res, email) => {
+const addProduct = async (req, res) => {
     const body = req.body;
+    const token = await req.cookies.coderCookieToken
+    const decodedToken = await decodeToken(token)
+    const {email}= decodedToken;
     try {
         const resProducts = await products.addProduct(body, email);
         res.status(200).json(resProducts);

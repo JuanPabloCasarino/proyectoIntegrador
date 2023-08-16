@@ -71,10 +71,8 @@ const getLogin = (req, res) => {
 }
 const postLogin = async (req, res) => {
     req.session.user = req.user;
-    const {email,password} = req.body;
-    const token = jwt.sign({email,password}, config.secretOrKey, {
-        expiresIn: '1h'
-    });
+    const {email, rol} = req.user;
+    const token = generateToken(email, rol);
     try {
         res.cookie('coderCookieToken', token, {
             maxAge: 60 * 60 * 1000,
@@ -84,7 +82,7 @@ const postLogin = async (req, res) => {
         
     } catch (error) {
         log.error(error);
-        res.status(500).json({error:error.message});
+        res.status(500).json({Error:error.message});
     }
 }
 const failLogin = async (req, res) => {
