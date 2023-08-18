@@ -120,11 +120,11 @@ const getProfile = async (req, res) => {
 }
 const logout = async (req, res) => {
     req.session.destroy();
-    res.redirect('/login');
+    res.redirect('/users/login');
 }
 const current = async (req, res) => {
     if (!req.session.user) {
-        res.redirect('/login');
+        res.redirect('/users/login');
     } else {
         const userResponse = await userDto(req.session.user)
         res.status(200).send(userResponse);
@@ -151,7 +151,7 @@ const passwordRecover = async (req, res) => {
 
     if (!req.user) {
         log.warn('Tienes que estar logueado para entrar a esta ruta')
-        res.redirect('/login');
+        res.redirect('/users/login');
     } else{
         const { email } = await req.user;
         if(!email) {
@@ -208,6 +208,45 @@ const resetPassword = async (req, res) => {
     }
     
 }
+const changeRol = async (req, res) => {
+    const {uid}= req.params;
+
+    const user = await users.getUserByID(uid)
+    const {firstname, lastname, email, age, password, rol, carts}= user;
+
+    try {
+         if(rol==="premium"){
+            const newRol = {
+                firstname:firstname,
+                lastname:lastname,
+                email:email,
+                age:age,
+                passport:password,
+                rol: "user",
+                carts:carts
+           }
+            users.updateUserById(uid, newRol)
+            res.status(200).send("Rol cambiado correctamente a user ")
+            }else if(rol==="user"){
+                 const newRol = {
+                    firstname:firstname,
+                    lastname:lastname,
+                    email:email,
+                    age:age,
+                    passport:password,
+                    rol: "premium",
+                    carts:carts
+               }
+            users.updateUserById(uid, newRol)
+            res.status(200).send("Rol cambiado correctamente a premium")
+            }else{
+                res.status(500).send("No puedes cambiar de admin a otro user")
+            }
+        } catch (error) {
+            log.error(error);
+        }
+       
+}
 
 export {
     privateRoute,
@@ -224,5 +263,6 @@ export {
     loggerTesting,
     passwordRecover,
     recoverPassword,
-    resetPassword
+    resetPassword,
+    changeRol
     }

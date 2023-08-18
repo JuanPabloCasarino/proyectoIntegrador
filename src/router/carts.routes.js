@@ -12,7 +12,8 @@ import {
   purchaseProduct, 
   confirmCart
 } from '../controllers/carts.controller.js';
-import {isCapable, isUser} from '../middlewares/sessionAccess.js';
+import {isCapable} from '../middlewares/sessionAccess.js';
+import { canAdd } from '../middlewares/premiumAccess.js';
 
 const router = Router();
 
@@ -26,7 +27,7 @@ router.get(`/:cid`, getCartById);
 router.post(`/`, createCart);
 
 //Agrego un producto a un carrito
-router.post(`/:cid/products/:pid`, isUser, addProductToCart);
+router.post(`/:cid/products/:pid`,canAdd, addProductToCart);
 
 // Eliminamos un producto del carrito
 router.delete(`/:cid/products/:pid`, deleteProduct);

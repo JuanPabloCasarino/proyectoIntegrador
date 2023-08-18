@@ -10,7 +10,8 @@ import {
   mockingProducts
 } from '../controllers/products.controller.js'
 import passportConfig from '../config/passport.config.js';
-import {isCapable, isUser} from '../middlewares/sessionAccess.js';
+import {isCapable} from '../middlewares/sessionAccess.js';
+import { canDelete } from '../middlewares/premiumAccess.js';
 import isValid from '../middlewares/errors/prodValidation.js';
 
 const router = Router();
@@ -23,7 +24,7 @@ router.post(`/`, isValid, isCapable, addProduct);
 
 router.put(`/:id`,isCapable, updateProduct);
 
-router.delete(`/:id`,isCapable, deleteProduct);
+router.delete(`/:id`,canDelete, deleteProduct);
 
 router.get(`/mockingProducts`, mockingProducts); 
 

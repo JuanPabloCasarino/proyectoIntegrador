@@ -74,16 +74,29 @@ const getProductsById = async (req, res) => {
 }
 const addProduct = async (req, res) => {
     const body = req.body;
+      //Destokenizo el token para tomar la info del usario de adentro
     const token = await req.cookies.coderCookieToken
     const decodedToken = await decodeToken(token)
-    const {email}= decodedToken;
-    try {
-        const resProducts = await products.addProduct(body, email);
-        res.status(200).json(resProducts);
-    } catch (error) {
-        log.error(error);
-        res.status(500).json({error:error.message});
+    const {email, rol}= decodedToken;
+    if(rol=== "premium"){
+        try {
+            const resProducts = await products.addProduct(body, email);
+            res.status(200).json(resProducts);
+        } catch (error) {
+            log.error(error);
+            res.status(500).json({error:error.message});
+        }
+    }else{
+        try {
+            const resProducts = await products.addProduct(body);
+            res.status(200).json(resProducts);
+        } catch (error) {
+            log.error(error);
+            res.status(500).json({error:error.message});
+        }
     }
+    
+    
 }
 
 const updateProduct = async (req, res) => {
@@ -100,9 +113,7 @@ const updateProduct = async (req, res) => {
     }
 }
 const deleteProduct = async (req, res) => {
-    const {
-        id
-    } = req.params;
+    const {id} = req.params;
     try {
         const resProduct = await products.deleteProduct(id);
         res.status(200).json(resProduct);

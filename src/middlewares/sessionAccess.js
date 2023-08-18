@@ -3,16 +3,16 @@ import {validateToken, decodeToken} from "../utils/validation.utils.js"
 import jwt from 'jsonwebtoken';
 
 const  isCapable = async (req, res, next) => {
-
+  //Destokenizo el token para tomar la info del usario de adentro
   const token = await req.cookies.coderCookieToken
   const decodedToken = await decodeToken(token)
   const {rol}= decodedToken;
   
   if (rol === 'admin') {
-    log.warn("Has creado el producto como admin")
+    log.warn("Has iniciado como admin")
     next();
   } else if (rol == 'premium') {
-    log.warn("Has creado el producto como Premium")
+    log.warn("Has iniciado como  Premium")
     next();
   }else if(rol !== 'admin' && rol !== 'premium') {
     log.warn("No tienes los permisos necesarios")
@@ -21,15 +21,4 @@ const  isCapable = async (req, res, next) => {
 
 }
 
-const  isUser = async (req, res, next) => {
-  const rol = await req.headers.rol; 
-
-  if (rol !== 'usuario') {
-    log.warn("No tienes los permisos necesarios")
-    return res.status(403).json({ error: 'Access denied. Users only.' });
-  }
-
-  next();
-}
-
-export {isCapable, isUser};
+export {isCapable};

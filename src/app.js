@@ -60,7 +60,7 @@ res.status(500).json({
 
 app.use('/api/products',productsRouter);
 app.use('/api/carts',cartRouter);
-app.use('/',viewsRouter);
+app.use('/users',viewsRouter);
 app.use('/api/sessions',sessionsRouter);
 app.use('/api/orders', orderRouter)
 app.use('/api/business', businessRouter)
