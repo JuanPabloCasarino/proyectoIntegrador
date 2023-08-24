@@ -1,0 +1,219 @@
+paths:
+  /api/carts/:
+    get: 
+      summary: "Obtiene todos los carritos"
+      tags: 
+       - Carts
+      responses: 
+        "200":
+          description: "Los carritos fueron obtenidos satisfactoriamente"
+          content: 
+            application/json:
+              schema:
+                type: array
+        "400":
+          description: "No autorizado"
+        "500":
+          description: "Error interno del servidor"
+    post:
+      summary: "Crea un carrito vacio"
+      tags: 
+       - Carts
+      responses: 
+        "200":
+          description: "El carrito fue creado correctamente"
+          content: 
+            application/json:
+              schema:
+                type: array
+        "400":
+          description: "No autorizado"
+        "500":
+          description: "Error interno del servidor"
+  /api/carts/{cid}:
+    get: 
+      summary: "Obtiene un carrito a partir del id"
+      tags: 
+       - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: "ID del carrito a buscar"
+      responses: 
+        "200":
+          description: "El carrito fue obtenido satisfactoriamente"
+          content: 
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#components/schemas/Cart'
+        "400":
+          description: "No autorizado"
+        "500":
+          description: "Error interno del servidor"
+    put: 
+      summary: "Actualiza los productos de un carrito"
+      tags: 
+       - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: "ID del carrito a actualizar"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/updateCart'
+      responses: 
+        "200":
+          description: "Los productos fueron actualizados correctamente"
+          content: 
+            application/json:
+              schema:
+                type: array
+        "400":
+          description: "No autorizado"
+        "500":
+          description: "Error interno del servidor"
+  /api/carts/{cid}/products/{pid}: 
+    post: 
+      summary: "Añade un producto al carrito"
+      tags: 
+       - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: "ID del carrito a buscar"
+        - name: pid
+          in: path
+          required: true
+          description: "ID del product a agregar" 
+      responses: 
+        "200":
+          description: "El producto fue agregado correctamente"
+          content: 
+            application/json:
+              schema:
+                type: array
+        "400":
+          description: "No autorizado"
+        "500":
+          description: "Error interno del servidor"
+    delete: 
+      summary: "Borra un producto al carrito"
+      tags: 
+       - Carts
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: "ID del carrito a buscar"
+        - name: pid
+          in: path
+          required: true
+          description: "ID del product a borrar" 
+      responses: 
+        "200":
+          description: "El producto fue borrado correctamente"
+          content: 
+            application/json:
+              schema:
+                type: array
+        "400":
+          description: "No autorizado"
+        "500":
+          description: "Error interno del servidor"
+  /api/carts/{cid}/purchase:
+    get: 
+      summary: "Obtiene una pagina para confirmar la compra del carrito"
+      tags: 
+       - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: "ID del carrito a buscar"
+      responses: 
+        "200":
+          description: "El carrito fue obtenido satisfactoriamente"
+          content: 
+            text/html:
+              schema:
+                type: array
+                items: 
+                  $ref: '#components/schemas/Cart'
+        "400":
+          description: "No autorizado"
+        "500":
+          description: "Error interno del servidor"
+    post: 
+      summary: "Confirma la compra del carrito"
+      tags: 
+       - Carts
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: "ID del carrito a buscar"
+      responses: 
+        "200":
+          description: "El carrito fue comprado satisfactoriamente y se creo un ticket de compra"
+          content: 
+            text/html:
+              schema:
+                type: array
+                items: 
+                  $ref: '#components/schemas/Cart'
+        "400":
+          description: "No autorizado"
+        "500":
+          description: "Error interno del servidor"
+  
+      
+    
+
+
+components:
+  schemas:
+    Cart:
+      type: object
+      properties: 
+        _id:
+          type: ObjectId
+          description: "ID autogenerado por mongo"
+        products:
+          type: array
+          properties:
+            product:
+              type: string
+              description: "ID de productos en el carrito"
+            quantity:
+              type: integer
+              description: "Cantidad del producto en el carrito"
+      example: 
+        _id:   ObjectId("648131dde00a0d0ad9af8662")
+        products: [product: ObjectId("64812764e16a770929bf32cb"), quantity: 3, ObjectId("64dd5bd59df79cb55217bc87"), quantity: 2]
+        quantity: 3
+  requestBodies:
+    updateCart:
+        type: object
+        properties: 
+          products:
+            type: array
+            properties:
+              product:
+                type: string
+                description: "ID de productos en el carrito"
+              quantity:
+                type: integer
+                description: "Cantidad del producto en el carrito"
+        example: 
+          products: [product: ObjectId("64812764e16a770929bf32cb"), quantity: 3, ObjectId("64dd5bd59df79cb55217bc87"), quantity: 2]
+          quantity: 3
+
+    

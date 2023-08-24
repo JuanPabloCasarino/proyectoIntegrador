@@ -17,7 +17,8 @@ const getAllCarts = async (req, res) => {
     const carts = await cartsService.getAllCarts();
     res.status(200).json(carts);
   } catch (error) {
-    log.fatal(error);
+    log.error(error);
+    res.status(400).send(error.message);
   }
 }
 const getCartById = async (req, res) => {
@@ -36,7 +37,8 @@ const getCartById = async (req, res) => {
     }
     res.render('productsOnCart', resp)
   } catch (error) {
-    log.fatal(error);
+    log.error(error);
+    res.status(400).send(error.message);
   }
 }
 
@@ -45,7 +47,8 @@ const createCart = async (req, res) => {
     const carts = await cartsService.addCart();
     res.status(200).json(carts);
   } catch (error) {
-    log.fatal(error);
+    log.error(error);
+    res.status(400).send(error.message);
   }
 }
 
@@ -59,7 +62,8 @@ const addProductToCart = async (req, res) => {
     const carts = await cartsService.addProductToCart(cid, pid);
     res.status(200).json(carts);
   } catch (error) {
-    log.fatal(error);
+    log.error(error);
+    res.status(400).send(error.message);
   }
 }
 
@@ -73,7 +77,8 @@ const deleteProduct = async (req, res) => {
 
     res.status(200).json(cart);
   } catch (error) {
-    log.fatal(error);
+    log.error(error);
+    res.status(400).send(error.message);
   }
 }
 
@@ -86,7 +91,8 @@ const deleteAllProducts = async (req, res) => {
     const cart = await cartsService.deleteAllProductsToCart(cid)
     res.status(200).json(cart);
   } catch (error) {
-    log.fatal(error);
+    log.error(error);
+    res.status(400).send(error.message);
   }
 }
 
@@ -100,7 +106,8 @@ const updateProduct = async (req, res) => {
     const cart = await cartsService.updateCart(cid, products);
     res.status(200).json(cart);
   } catch (error) {
-    log.fatal(error);
+    log.error(error);
+    res.status(400).send(error.message);
   }
 }
 
@@ -117,7 +124,8 @@ const updateProductToCart = async (req, res) => {
 
     res.status(200).json(cart);
   } catch (error) {
-    log.fatal(error);
+    log.error(error);
+    res.status(400).send(error.message);
   }
 }
 const confirmCart = async (req, res) => {
@@ -141,7 +149,7 @@ const confirmCart = async (req, res) => {
 
   } catch (error) {
     log.error(error);
-    res.status(500).json({error: error.message});
+    res.status(400).send(error.message);
   }
 }
 

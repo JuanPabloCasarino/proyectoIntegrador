@@ -7,7 +7,6 @@ import {
   addProduct,
   updateProduct,
   deleteProduct,
-  mockingProducts
 } from '../controllers/products.controller.js'
 import passportConfig from '../config/passport.config.js';
 import {isCapable} from '../middlewares/sessionAccess.js';
@@ -26,6 +25,5 @@ router.put(`/:id`,isCapable, updateProduct);
 
 router.delete(`/:id`,canDelete, deleteProduct);
 
-router.get(`/mockingProducts`, mockingProducts); 
 
 export default router;

@@ -1,0 +1,178 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtiene todos los products
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Los productos fueron obtenidos sactifactoriamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Product'
+        "400":
+          description: "No autorizado - probablemente token no valido"
+        "500":
+          description: "Error interno del servidor"
+    post:
+      summary: Agrega un producto
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/updateProduct'
+      responses:
+        "200":
+          description: El producto fue agregado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: "No autorizado - probablemente token no valido"
+        "500":
+          description: "Error interno del servidor"
+  /api/products/{uid}:
+    get:
+      summary: Obtiene un producto a partir de su ID
+      tags:
+        -  Products
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: Id del producto que desea solicitar
+      responses:
+          "200":
+            description: Producto encontrado
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#components/schemas/Product'
+          "400":
+            description: "No autorizado - probablemente token no valido"
+          "500":
+            description: Error interno del servidor
+    put:
+      summary: Actualiza un producto a partir de su Id
+      tags:
+        - Products
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: Id del producto a actualizar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/updateProduct'
+      responses:
+        "200":
+          description: Producto actualizado
+        "400":
+          description: "No autorizado - probablemente token no valido"
+        "500":
+          description: Error interno del servidor
+    delete:
+      summary: Borra un producto a partir de su Id
+      tags:
+        - Products
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: Id del producto a borrar
+      responses:
+        "200":
+          description: Producto borrado
+        "400":
+          description: "No autorizado - probablemente token no valido"
+        "500":
+          description: Error interno del servidor
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado de mongo
+        title:
+          type: String
+          description: Nombre del producto
+        price:
+          type: Number
+          description: Precio del producto
+        description:
+          type: String
+          description:  Descripcion del producto
+        thumbnail:
+          type: String
+          description: Link de foto del producto
+        status:
+          type: Boolean
+          description: Estado del producto
+        code:
+          type: String
+          description: Codigo que identifica al producto
+        category:
+          type: String
+          description: Categoria a la que pertenece el producto
+        owner:
+          type: String
+          description: Creador del producto
+      example:
+        _id: ObjectId("64812764e16a770929bf32cf")
+        title: Torta de naranja 
+        price: 130
+        description: Deliciosa torta hecha con naranja natural que tiene nueces crocantes
+        thumbnail: /local/tortas/naranja.jpg
+        stock: 10
+        code: ABC123
+        category: dulces
+        owner: juan21casarino@gmail.com
+
+  requestBodies:
+    updateProduct:
+      type: object
+      properties:
+        title:
+          type: String
+          description: Nombre del producto
+        price:
+          type: Number
+          description: Precio del producto
+        description:
+          type: String
+          description:  Descripcion del producto
+        status:
+          type: Boolean
+          description: Estado del producto
+        code:
+          type: String
+          description: Codigo que identifica al producto
+        category:
+          type: String
+          description: Categoria a la que pertenece el producto
+        owner:
+          type: String
+          description: Creador del producto
+      example:
+        title: Torta de naranja 
+        price: 130
+        description: Deliciosa torta hecha con naranja natural que tiene nueces crocantes
+        stock: 10
+        code: ABC123
+        category: dulces
+        owner: juan21casarino@gmail.com

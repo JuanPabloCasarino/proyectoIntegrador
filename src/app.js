@@ -11,7 +11,10 @@ import config from './config/config.js';
 // IMPORTO FUNCIONES CREADAS POR MI
 import initializePassport from './config/passport.config.js'
 import {__dirname} from './utils.js';
+import customError from './services/errors/CustomError.js';
+import log from './config/loggers/customLogger.js';
 
+// Importo rutas
 import productsRouter from './router/products.routes.js';
 import cartRouter from './router/carts.routes.js';
 import viewsRouter from './router/views.routes.js';
@@ -19,13 +22,26 @@ import sessionsRouter from './router/sessions.router.js';
 import businessRouter from './router/business.router.js';
 import orderRouter from './router/order.router.js';
 import { mockingProducts } from './controllers/products.controller.js';
-import errorHandler from "./middlewares/errors/info.js";
-import customError from './services/errors/CustomError.js';
-import log from './config/loggers/customLogger.js';
+
+//Swagger imports
+import swaggerJSDoc from 'swagger-jsdoc'
+import swaggerUiExpress from 'swagger-ui-express'
 
 const publics = path.join(__dirname, './public');
 
 const app = express();
+
+const swaggerOptions = {
+    definition:{
+        openapi:"3.0.1",
+        info:{
+            title:'Dcoumentacion en swagger',
+            description:'Ecommerce de una pasteleria para el proyecto final de Coderhouse '
+        }
+    },
+    apis:[__dirname+'/docs/**/*.yaml']
+}
+const specs = swaggerJSDoc(swaggerOptions)
 
 app.use(session({
     secret: config.secretOrKey,
@@ -57,6 +73,7 @@ res.status(500).json({
 })
 });
 
+app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 
 app.use('/api/products',productsRouter);
 app.use('/api/carts',cartRouter);
