@@ -78,23 +78,20 @@ const addProduct = async (req, res) => {
     const token = await req.cookies.coderCookieToken
     const decodedToken = await decodeToken(token)
     const {email, rol}= decodedToken;
-    if(rol=== "premium"){
-        try {
+    try {
+        if(rol=== "premium"){      
             const resProducts = await products.addProduct(body, email);
-            res.status(200).json(resProducts);
-        } catch (error) {
-            log.error(error);
-            res.status(500).json({error:error.message});
-        }
+            res.status(200).json(resProducts);         
     }else{
-        try {
-            const resProducts = await products.addProduct(body);
-            res.status(200).json(resProducts);
-        } catch (error) {
-            log.error(error);
-            res.status(500).json({error:error.message});
-        }
+            const resProducts = await products.addProduct(body, "admin");
+            res.status(200).json(resProducts);      
     }
+    } catch (error) {
+        log.error(error);
+        res.status(500).json({error:error.message});
+        
+    }
+    
     
     
 }
