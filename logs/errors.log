@@ -127,3 +127,10 @@ error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"1\
 error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"1\"","value":"1","valueType":"string"}
 error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"1\"","value":"1","valueType":"string"}
 error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"mockingProducts\"","value":"mockingProducts","valueType":"string"}
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: No hay mas productos creados 
+error: undefined
+error: No hay mas productos creados

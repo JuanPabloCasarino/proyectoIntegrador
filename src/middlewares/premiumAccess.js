@@ -10,6 +10,9 @@ const canDelete = async(req, res, next) => {
     const { owner } = product;
     //Tomo la info de quien esta haciendo el delete
     const token = await req.cookies.coderCookieToken
+    if (!token) {
+      return res.status(403).json({ error: 'Access denied. JWT must be provided' });
+    }
     const decodedToken = await decodeToken(token)
     const {rol, email}= decodedToken;
 
@@ -33,6 +36,9 @@ const canAdd = async(req,res, next)=>{
     const { owner } = product;
     //Tomo la info de quien esta haciendo el delete
     const token = await req.cookies.coderCookieToken
+    if (!token) {
+      return res.status(403).json({ error: 'Access denied. JWT must be provided' });
+    }
     const decodedToken = await decodeToken(token)
     const {rol, email}= decodedToken;
     

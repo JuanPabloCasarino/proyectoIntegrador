@@ -27,15 +27,8 @@ const getCartById = async (req, res) => {
   } = req.params;
   try {
     const cart = await cartsService.getCartById(cid);
-    const quantity = await (cart.products.quantity);
-    let resp;
-    const allProducts = [];
-    for (let i = 0; i < cart.products.length; i++) {
-      resp = await productService.getProductById(cart.products[i].product);
-      allProducts.push(resp);
-      log.info(resp);
-    }
-    res.render('productsOnCart', resp)
+    
+    res.status(200).json(cart);
   } catch (error) {
     log.error(error);
     res.status(400).send(error.message);
@@ -104,24 +97,6 @@ const updateProduct = async (req, res) => {
 
   try {
     const cart = await cartsService.updateCart(cid, products);
-    res.status(200).json(cart);
-  } catch (error) {
-    log.error(error);
-    res.status(400).send(error.message);
-  }
-}
-
-const updateProductToCart = async (req, res) => {
-  const {
-    cid,
-    pid
-  } = req.params;
-  const {
-    quantity
-  } = req.body
-  try {
-    const cart = await cartsService.updateProductToCart(cid, pid, quantity);
-
     res.status(200).json(cart);
   } catch (error) {
     log.error(error);
@@ -206,7 +181,6 @@ export {
   deleteProduct,
   deleteAllProducts,
   updateProduct,
-  updateProductToCart,
   purchaseProduct,
   confirmCart
 };

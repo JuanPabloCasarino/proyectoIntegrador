@@ -1,7 +1,7 @@
 // Importamos nuestros modelo de Cart para trabajar sobre el con los métodos de mongoose
 import CartModel from '../dao/models/cart.model.js';
 import ProductModel from '../dao/models/product.model.js';
-
+import log from '../config/loggers/customLogger.js';
 export class CartServiceDB {
   static instance = null;
 
@@ -77,7 +77,10 @@ export class CartServiceDB {
     if (!cart) return `El carrito con el id ${cid} no existe`;
 
     const checkProduct = cart.products.find((p) => p.product == pid);
-
+    if(!checkProduct){
+      log.info("No hay productos con ese ID en este carrito")
+      return cart
+    }
     // Descontamos la cantidad del producto en 1
     checkProduct.quantity = checkProduct.quantity - 1;
 
@@ -102,10 +105,8 @@ export class CartServiceDB {
   async deleteAllProductsToCart(cid) {
     const cart = await CartModel.findOne({ _id: cid });
     if (!cart) return `El carrito con el id ${cid} no existe`;
-
     cart.products = [];
     await cart.save();
-
     return cart;
   }
 
@@ -121,21 +122,4 @@ export class CartServiceDB {
     return cart;
   }
 
-  // Actualizamos al cantidad de productos del carrito
-  async updateProductToCart(cid, pid, quantity) {
-    const cart = await CartModel.findOne({ _id: cid });
-    if (!cart) return `El carrito con el id ${cid} no existe`;
-
-    const product = await ProductModel.findOne({ _id: pid });
-    if (!product) return `El producto con el id ${pid} no existe`;
-
-    const checkProduct = cart.products.find((p) => p.product == pid);
-
-    // Modificamos la cantidad enviada por el usuario
-    checkProduct.quantity = quantity;
-
-    await cart.save();
-
-    return cart;
-  }
 }

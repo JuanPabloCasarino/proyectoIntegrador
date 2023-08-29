@@ -8,7 +8,6 @@ import {
   deleteProduct,
   deleteAllProducts,
   updateProduct,
-  updateProductToCart,
   purchaseProduct, 
   confirmCart
 } from '../controllers/carts.controller.js';
@@ -37,9 +36,6 @@ router.delete(`/:cid`, deleteAllProducts);
 
 //Actualizo el carrito con un producto
 router.put(`/:cid`, updateProduct);
-
-// Actualizo un producto de un carrito
-router.put(`/:cid/products/:pid`, updateProductToCart);
 
 router.get(`/:cid/purchase`, confirmCart);
 
