@@ -24,7 +24,7 @@ const privateRoute = (req, res, next) => {
     if (req.session.user) {
         next();
     } else {
-        res.redirect('/login');
+        res.redirect('/users/login');
     }
 };
 // Middleware para validar rutas públicas
@@ -94,7 +94,7 @@ const failLogin = async (req, res) => {
 const getProfile = async (req, res) => {
     req.session.user = req.user;
     if (!req.session.user) {
-        res.redirect('/login');
+        res.redirect('/users/login');
     } else {
         const {
             firstname,

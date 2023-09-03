@@ -51,6 +51,7 @@ const userSchema = new mongoose.Schema({
           },
         ],
         default: [],
+        required: false
     }
 })
 userSchema.pre("find", function () {

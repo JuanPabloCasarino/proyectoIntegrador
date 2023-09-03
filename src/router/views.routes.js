@@ -32,7 +32,7 @@ router.get('/failRegister', failRegister)
 
 router.get('/login', publicRoute, getLogin);
 
-router.post('/login', passport.authenticate('login', { failureRedirect: '/failLogin' }), publicRoute, postLogin);
+router.post('/login', passport.authenticate('login', { failureRedirect: 'failLogin' }), publicRoute, postLogin);
 
 router.get('/failLogin', failLogin)
 
