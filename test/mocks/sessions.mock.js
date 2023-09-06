@@ -13,4 +13,6 @@ const user2= {
     password:"12345"
 }
 
-export {user1, user2}
+const uid = "64f4d3b21a402871660fe133"
+
+export {user1, user2, uid}

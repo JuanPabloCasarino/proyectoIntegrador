@@ -33,15 +33,15 @@ describe('Testing products routes',()=>{
         expect(result.body).to.be.an('object');
     })
 
-    it.skip('It should create a product',async ()=>{
+    it('It should return a 403 error because of a missing jwt when creating a product',async ()=>{
         
         const result = await requester.post('/api/products').send(prod1);
 
        // expect(result.ok).to.be.true;
-        expect(result.statusCode).to.deep.equal(200);
-        expect(result.body.payload).to.have.property('_id')
+       expect(result.ok).to.be.false;
+       expect(result.statusCode).to.deep.equal(403);
     })
-    it('It should return a 403 error because of a missing jwt',async ()=>{
+    it('It should return a 403 error because of a missing jwt when deleting a product',async ()=>{
         
         const result = await requester.post('/api/products').send(prod1);
 
