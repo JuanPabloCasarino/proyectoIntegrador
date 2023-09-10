@@ -52,7 +52,7 @@ const postRegister = async (req, res) => {
                 code:EErors.INVALID_TYPE_ERROR
             })
         }
-        res.redirect('/login');
+        res.redirect('/users/login');
     } catch (error) {
         log.error(error);
         res.status(500).json({error:error.message});
@@ -71,8 +71,10 @@ const getLogin = (req, res) => {
 }
 const postLogin = async (req, res) => {
     req.session.user = req.user;
-    const {email, rol} = req.user;
+    const {email, rol, _id} = req.user;
     const token = generateToken(email, rol);
+    const date = Date.now();
+    users.updateConnection(_id, date)
     try {
         res.cookie('coderCookieToken', token, {
             maxAge: 60 * 60 * 1000,
@@ -119,6 +121,11 @@ const getProfile = async (req, res) => {
     }
 }
 const logout = async (req, res) => {
+    req.session.user = req.user;
+    const {_id} = req.user;
+    const date = Date.now();
+    users.updateConnection(_id, date)
+    log.debug('Logged out, last connection: '+date);
     req.session.destroy();
     res.redirect('/users/login');
 }
@@ -157,14 +164,12 @@ const passwordRecover = async (req, res) => {
         if(!email) {
             return res.status(404).send("Email no enviado");
         }
-    
         try {
             const user = await users.getUserByEmail(email);
             
             if(!user) {
                 return res.status(404).send("Usuario no existente!");
             }
-    
             const token = generateToken(email);
             sendRecoverPassword(email, token);
             res.status(200).send("Reseto de contraseña enviada!");
@@ -248,6 +253,10 @@ const changeRol = async (req, res) => {
        
 }
 
+const updateDocs = async (req, res) => {
+
+}
+
 export {
     privateRoute,
     publicRoute,
@@ -264,5 +273,6 @@ export {
     passwordRecover,
     recoverPassword,
     resetPassword,
-    changeRol
+    changeRol,
+    updateDocs
     }

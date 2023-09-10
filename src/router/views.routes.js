@@ -16,7 +16,8 @@ import {
     passwordRecover,
     recoverPassword,
     resetPassword,
-    changeRol} from '../controllers/views.controller.js';
+    changeRol,
+    updateDocs} from '../controllers/views.controller.js';
 
 import { isUserOrTokenValid } from '../middlewares/userVerification.js';
 
@@ -53,6 +54,9 @@ router.post('/recoverPassword', isUserOrTokenValid ,resetPassword);
 router.get('/loggerTest', loggerTesting);
 
 router.get('/premium/:uid', changeRol)
+
+router.post('/premium/:uid/documents', updateDocs)
+
 
 
 export default router;

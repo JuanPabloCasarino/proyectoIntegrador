@@ -21,28 +21,10 @@ class userServicesDB {
     updateUserById = async (id, info) => await users.updateOne({_id: id}, {$set: info});
 
     updatePasswordByEmail = async (email, hashedPassword) => await users.updateOne({email: email}, {$set: {password: hashedPassword}});
-    
-    changeRol = async (uid)=>{
-        const user = this.getUserByID(uid)
-        const {firstname, lastname, email, age, password, rol, carts}= user;
-        
-        if(rol==="premium"){
-            const newRol = {
-                ...user,
-                rol: user
-            }
-            await users.updateOne({_id: id}, {$set: newRol});
-        }else if(rol==="user"){
-            const newRol = {
-                ...user,
-                rol: premium
-            }
-            await users.updateOne({_id: id}, {$set: newRol});
-        }
-
-    } 
 
     updateOrderByUserId = async (id, orderId) => await users.updateOne({_id: id}, {$push: {orders: orderId}});
+
+    updateConnection = async (id, date) => await users.updateOne({_id: id}, {$set: {lastConnection: date}});
 }
 
 export default userServicesDB

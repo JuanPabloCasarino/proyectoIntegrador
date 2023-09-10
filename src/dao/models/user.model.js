@@ -52,7 +52,47 @@ const userSchema = new mongoose.Schema({
         ],
         default: [],
         required: false
-    }
+    },
+    documents: {
+      type: [
+        {
+          name: {
+            type: String,
+            required: false
+          },
+          reference:{
+            type: String,
+            required: false
+          }
+        },
+      ],
+      default: [],
+      required: false
+  },
+  lastConnection:{
+    type: Date,
+    default: Date.now
+  },
+  status: {
+    type: [
+      {
+        profile: {
+          type: Boolean,
+          default:false
+        },
+        product: {
+          type: Boolean,
+          default:false
+        },
+        doc: {
+          type: Boolean,
+          default:false
+        }
+      },
+    ],
+    default: [],
+    required: false
+  }
 })
 userSchema.pre("find", function () {
     this.populate("carts.cart")
