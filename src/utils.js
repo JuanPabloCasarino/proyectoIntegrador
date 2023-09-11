@@ -44,5 +44,4 @@ const passportCall = (strategy) => {
 }
 
 
-
 export {__dirname, generateToken, authToken, passportCall};

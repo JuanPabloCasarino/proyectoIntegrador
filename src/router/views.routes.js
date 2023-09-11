@@ -19,6 +19,8 @@ import {
     changeRol,
     updateDocs} from '../controllers/views.controller.js';
 
+import { uploader } from '../middlewares/multer.js';
+
 import { isUserOrTokenValid } from '../middlewares/userVerification.js';
 
 const router = Router();
@@ -55,7 +57,7 @@ router.get('/loggerTest', loggerTesting);
 
 router.get('/premium/:uid', changeRol)
 
-router.post('/premium/:uid/documents', updateDocs)
+router.post('/:uid/documents',  uploader.single('file'), updateDocs)
 
 
 

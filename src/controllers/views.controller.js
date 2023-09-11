@@ -10,6 +10,7 @@ import config from '../config/config.js';
 import { userDto } from '../DTO/userDto.js';
 import { createHash, generateToken, validateToken } from '../utils/validation.utils.js';
 import { sendRecoverPassword } from '../utils/mail.utils.js';
+import { uploader } from '../middlewares/multer.js';
 // Imports de Custom errors
 import customError from '../services/errors/CustomError.js';
 import EErors from '../services/errors/enum.js';
@@ -254,7 +255,11 @@ const changeRol = async (req, res) => {
 }
 
 const updateDocs = async (req, res) => {
-
+    if(!req.file){
+        return res.status(404).send({error: "No se pudo guardar el documento"})
+    }
+    log.info(req.file)
+    res.status(200).send("El documento ha sido subido correctamente")
 }
 
 export {
