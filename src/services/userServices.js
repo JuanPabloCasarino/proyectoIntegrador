@@ -25,6 +25,8 @@ class userServicesDB {
     updateOrderByUserId = async (id, orderId) => await users.updateOne({_id: id}, {$push: {orders: orderId}});
 
     updateConnection = async (id, date) => await users.updateOne({_id: id}, {$set: {lastConnection: date}});
+
+    deleteUser = async (id) => await users.deleteOne({ _id: id });
 }
 
 export default userServicesDB

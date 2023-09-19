@@ -278,7 +278,31 @@ const getUsers = async (req, res) => {
 }
 
 const deleteUsers = async (req, res) => {
-    const users = await users.getAll()
+    const allUsers = await users.getAll()
+
+    //Seteo la fecha de hace 2 dias
+    const twoDaysAgo = new Date()
+    twoDaysAgo.setDate(twoDaysAgo.getDate()-2)
+    try {
+        //Filtro los usuarios que estan inactivos hace 2 dias o mas
+        const activeUsers = allUsers.filter((allUsers)=>{
+            return new Date(allUsers.lastConnection) <= twoDaysAgo
+        })
+        if(activeUsers=='') {
+            log.info("No hay usuarios inactivos que borrar")
+            res.status(200).send("No hay usuarios inactivos que borrar")
+        }else{
+            log.info("Estos son los usuarios que fueron borrados:")
+            activeUsers.forEach((e) => {
+                log.info("-"+e.email)
+                users.deleteUser(e.id)})
+            res.status(200).json("Usuarios borrados correctamente");   
+        }
+        
+    } catch (error) {
+        log.error(error);
+        res.status(500).json({error:error.message});
+    }
 }
 
 export {
