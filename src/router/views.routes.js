@@ -17,7 +17,9 @@ import {
     recoverPassword,
     resetPassword,
     changeRol,
-    updateDocs} from '../controllers/views.controller.js';
+    updateDocs,
+    getUsers,
+    deleteUsers} from '../controllers/views.controller.js';
 
 import { uploader } from '../middlewares/multer.js';
 
@@ -58,6 +60,10 @@ router.get('/loggerTest', loggerTesting);
 router.get('/premium/:uid', changeRol)
 
 router.post('/:uid/documents',  uploader.single('file'), updateDocs)
+
+router.get('/getUsers', getUsers)
+
+router.delete('/delete', deleteUsers)
 
 
 

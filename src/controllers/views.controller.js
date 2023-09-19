@@ -262,6 +262,25 @@ const updateDocs = async (req, res) => {
     res.status(200).send("El documento ha sido subido correctamente")
 }
 
+const getUsers = async (req, res) => {
+    try {
+        const allUsers = await users.getAll()
+        const usersDto = await allUsers.map((allUsers) => {
+            return userDto(allUsers)
+        })
+   
+    res.status(200).json(usersDto)
+    } catch (error) {
+        log.error(error);
+        res.status(500).json({error:error.message});
+    }
+    
+}
+
+const deleteUsers = async (req, res) => {
+    const users = await users.getAll()
+}
+
 export {
     privateRoute,
     publicRoute,
@@ -279,5 +298,7 @@ export {
     recoverPassword,
     resetPassword,
     changeRol,
-    updateDocs
+    updateDocs,
+    getUsers,
+    deleteUsers
     }

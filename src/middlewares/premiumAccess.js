@@ -18,7 +18,6 @@ const canDelete = async(req, res, next) => {
 
   if(rol==="premium"){
     if(email===owner){
-        log.info("Has podido borrar tu producto")
         next()
     }else{
         log.warn("No puedes borrar productos que no son tuyos")
@@ -55,4 +54,12 @@ const canAdd = async(req,res, next)=>{
   }    
 }
 
-export {canDelete, canAdd}
+const canBuy = async (req, res, next) => {
+  const token = await req.cookies.coderCookieToken
+    if (!token) {
+      return res.status(403).json({ error: 'Access denied. JWT must be provided' });
+    }
+    next()
+}
+
+export {canDelete, canAdd, canBuy}

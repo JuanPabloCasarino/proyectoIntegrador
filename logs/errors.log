@@ -135,3 +135,25 @@ error: No hay mas productos creados
 error: undefined
 error: No hay mas productos creados
 error: undefined {"modifiedPaths":["products"],"version":17}
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined
+error: undefined {"kind":"ObjectId","path":"_id","reason":{},"stringValue":"\"64c05213d363f337adb14caa}\"","value":"64c05213d363f337adb14caa}","valueType":"string"}
+error: undefined
+error: ErrorReferenceError: decodeToken is not defined
+error: ErrorReferenceError: decodeToken is not defined
+error: ErrorValidationError: amount: Cast to Number failed for value "NaN" (type number) at path "amount"

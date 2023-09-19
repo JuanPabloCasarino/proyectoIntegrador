@@ -7,6 +7,7 @@ import express from 'express';
 import nodemailer from 'nodemailer'
 import transport from '../middlewares/mailing.js'; 
 import log from '../config/loggers/customLogger.js';
+import { decodeToken } from '../utils/validation.utils.js';
 
 const cartsService = new CartServiceDB();
 const productService = new ProductServiceDB();
@@ -22,9 +23,7 @@ const getAllCarts = async (req, res) => {
   }
 }
 const getCartById = async (req, res) => {
-  const {
-    cid
-  } = req.params;
+  const {cid} = req.params;
   try {
     const cart = await cartsService.getCartById(cid);
     
@@ -103,63 +102,58 @@ const updateProduct = async (req, res) => {
     res.status(400).send(error.message);
   }
 }
-const confirmCart = async (req, res) => {
-  const {
-    cid
-  } = req.params;
-  try {
-    if (!req.session.user) {
-      res.redirect('/login');
-    } else {
-      const cart = await cartsService.getCartById(cid);
-      let resp;
-      let sum = 0;
-      for (let i = 0; i < cart.products.length; i++) {
-        resp = await productService.getProductById(cart.products[i].product)
-      }
-      const title = resp.title;
-      const price = resp.price;
-      res.render('confirm', {title,price,cid})
-    }
 
+//Vista para saber que carrito voy a comprar
+const confirmCart = async (req, res) => {
+  const {cid} = req.params;
+  try {
+    const cart = await cartsService.getCartById(cid);
+    
+    res.status(200).json(cart);
   } catch (error) {
     log.error(error);
     res.status(400).send(error.message);
   }
 }
 
+
+//Posteo para confirmar la compra del carrito
 const purchaseProduct = async (req, res) => {
-  const cid = req.params.cid;
-  if (!req.session.user) {
-    res.redirect('/login');
-  } else {
+  const {cid} = req.params;
     try {
-      const userResponse = await userDto(req.session.user)
+      //Consigo info del user
+      const token = await req.cookies.coderCookieToken
+      const decodedToken = await decodeToken(token)
+      const {rol, email}= decodedToken;
+    
+      //Armo la info del carrito
       const cart = await cartsService.getCartById(cid);
       if (!cart) {
         return res.status(404).json({
           message: 'Carrito no encontrado'
         });
       }
+      const prods = []
       let resp;
       let sum = 0;
       for (let i = 0; i < cart.products.length; i++) {
         resp = await productService.getProductById(cart.products[i].product)
         const quantity = await (cart.products[i].quantity);
         sum = sum + (resp.price * quantity);
-        log.info(resp.title + ': ' + resp.price)
+        prods.push(' '+resp.title)
+        log.info("Prod NRO°"+(i+1)+" "+resp.title + ': ' + resp.price)
       }
       const newTicket = {
         amount: sum,
-        purchaser: userResponse.email
+        purchaser: email
       }
       const ticketResult = await ticketService.createTicket(newTicket)
 
       let result = await transport.sendMail({
         from: "juan21casarino@gmail.com",
-        to: userResponse.email,
-        subject: 'Ticket de compra:'+ticketResult.title,
-        html: '<div><h1>Ticket de compra</h1></div><div><p>Gracias por confiar en nosotros! La suma total fue '+sum+'</p></div>',
+        to: email,
+        subject: 'Ticket de compra: '+ticketResult._id,
+        html: '<div><h1>Ticket de compra</h1></div><div><p>Gracias por confiar en nosotros! La suma total fue '+sum+'</p></div><div><p>Los productos comprados fueron los siguientes:'+prods+'</p></div>',
         attachments:''
       })
       res.status(200).send('Compra finalizada exitosamente, el ticket es: ' + ticketResult);
@@ -169,7 +163,7 @@ const purchaseProduct = async (req, res) => {
         message: 'Error en el servidor al procesar la compra'
       });
     }
-  }
+  
 
 }
 

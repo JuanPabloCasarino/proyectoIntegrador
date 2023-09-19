@@ -7,6 +7,8 @@ import {generateProducts} from '../middlewares/generateProduct.js';
 import isValid from '../middlewares/errors/prodValidation.js';
 import log from '../config/loggers/customLogger.js';
 import { decodeToken } from '../utils/validation.utils.js';
+import nodemailer from 'nodemailer'
+import transport from '../middlewares/mailing.js';
 
 const products = new ProductServiceDB();
 const path = 'products';
@@ -95,9 +97,7 @@ const addProduct = async (req, res) => {
 }
 
 const updateProduct = async (req, res) => {
-    const {
-        id
-    } = req.params;
+    const {id} = req.params;
     const body = req.body;
     try {
         const resProducts = await products.updateProduct(id, body);
@@ -108,10 +108,30 @@ const updateProduct = async (req, res) => {
     }
 }
 const deleteProduct = async (req, res) => {
+    const token = await req.cookies.coderCookieToken
+    const decodedToken = await decodeToken(token)
+    const {rol, email}= decodedToken;
     const {id} = req.params;
-    try {
-        const resProduct = await products.deleteProduct(id);
-        res.status(200).json(resProduct);
+    const prod = await products.getProductById(id)
+     try {
+        if(rol==="premium"){
+            const resProduct = await products.deleteProduct(id);
+
+            let result = await transport.sendMail({
+                from: "juan21casarino@gmail.com",
+                to: email,
+                subject: 'Hemos eliminado tu producto: '+prod.title,
+                html: '<div><h1>Eliminamos el producto con el ID: '+id+'</h1></div><div><p>Title: '+prod.title+'</p></div>',
+                attachments:''
+              })
+            log.info("Has borrado correctamente tu producto y te hemos enviado un email")
+            res.status(200).json(resProduct);
+          }else{
+            const resProduct = await products.deleteProduct(id);
+            log.info("Has borrado correctamente tu producto")
+            res.status(200).json(resProduct);
+          }
+        
     } catch (error) {
         log.error(error);
         res.status(500).json({error:error.message});

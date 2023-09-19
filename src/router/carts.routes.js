@@ -12,7 +12,7 @@ import {
   confirmCart
 } from '../controllers/carts.controller.js';
 import {isCapable} from '../middlewares/sessionAccess.js';
-import { canAdd } from '../middlewares/premiumAccess.js';
+import { canAdd, canBuy } from '../middlewares/premiumAccess.js';
 
 const router = Router();
 
@@ -37,8 +37,10 @@ router.delete(`/:cid`, deleteAllProducts);
 //Actualizo el carrito con un producto
 router.put(`/:cid`, updateProduct);
 
+//Vista para saber que carrito voy a comprar
 router.get(`/:cid/purchase`, confirmCart);
 
+//Posteo para confirmar la compra del carrito
 router.post(`/:cid/purchase`, purchaseProduct);
 
 export default router;
